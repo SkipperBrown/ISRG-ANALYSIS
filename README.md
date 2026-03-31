@@ -30,7 +30,7 @@ penetrated, the toll road has barely opened.
 |---|---|---|
 | 1 | 📹 2-Minute Video Walkthrough | [Watch on Loom](#) |
 | 2 | 📊 Full Pitch Deck (Interactive HTML) | [View Presentation](#) |
-| 3 | 🔗 Perplexity Computer Thread | [View Research Thread](#) |
+| 3 | 🔗 Perplexity Computer Thread | [View Full Autonomous Research Workflow](#) |
 
 ---
 
