@@ -42,10 +42,10 @@ penetrated, the toll road has barely opened.
   procedure-volume impact — the activist catalyst lens.
 - **Ken Hao (Silver Lake):** 15M-procedure AI training data moat, usage-based 
   platform economics, technology transformation at scale.
-- **Dmitry Shevelenko (Perplexity)** | The full 13-slide pitch — financial model, 
+- **Dmitry Shevelenko (Perplexity):** The full 13-slide pitch — financial model, 
   competitive stress test, DCF sensitivity, catalyst timeline, bear case rebuttal — 
   was built autonomously using Perplexity Computer alone. No Bloomberg. 
-  No Excel. No outside tools. This is what the product can do. 
+  No Excel. No outside tools. THIS is what your product can do. 
 ---
 
 ## Research Methodology
