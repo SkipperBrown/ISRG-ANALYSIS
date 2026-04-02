@@ -1,48 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISRG Analysis Hub | The Surgical Toll Road</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #0e1117; color: #ffffff; text-align: center; }
-        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 50px 20px; border-bottom: 2px solid #007bff; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 20px; }
-        .price-target { font-size: 2.5em; color: #4ade80; font-weight: bold; margin: 10px 0; }
-        .card { background: #1f2937; padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #374151; }
-        .button { background-color: #007bff; color: white; padding: 15px 35px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; transition: 0.3s; margin: 10px; }
-        .button:hover { background-color: #0056b3; transform: translateY(-2px); }
-        .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px; margin-top: 20px; }
-        .embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        h1, h2 { color: #f3f4f6; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISRG — The Surgical Toll Road | Perplexity Computer Stock Pitch Competition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:#0a0e17; --bg2:#060810; --card:#141b2d; --card2:#1a2338;
+      --teal:#00d4aa; --gold:#f0b90b; --red:#ff4d6a; --blue:#4a9eff;
+      --white:#f0f2f5; --gray:#8892a4; --dim:#5a6478;
+      --border:rgba(0,212,170,0.15); --glow:rgba(0,212,170,0.07);
+    }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:Inter,-apple-system,sans-serif;
+      background:var(--bg); color:var(--white);
+      overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    }
+    .mesh { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .blob { position:absolute; border-radius:50%; filter:blur(110px); opacity:0.07; }
+    .b1 { width:750px; height:750px; top:-200px; right:-150px; background:var(--teal);
+          animation:d1 20s ease-in-out infinite; }
+    .b2 { width:550px; height:550px; bottom:15%; left:-180px; background:var(--blue);
+          animation:d2 26s ease-in-out infinite; }
+    .b3 { width:450px; height:450px; top:55%; left:42%; background:var(--gold); opacity:0.04;
+          animation:d1 32s ease-in-out infinite reverse; }
+    @keyframes d1 {
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(55px,-75px) scale(1.08)}
+      66%{transform:translate(-40px,55px) scale(0.93)}
+    }
+    @keyframes d2 {
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(-65px,45px) scale(1.07)}
+      66%{transform:translate(45px,-35px) scale(0.94)}
+    }
+    body::before {
+      content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:radial-gradient(ellipse at center, transparent 38%, rgba(0,0,0,0.5) 100%);
+    }
+    #particles { position:fixed; inset:0; z-index:2; pointer-events:none; }
+    .spotlight { position:fixed; inset:0; z-index:2; pointer-events:none; }
+    .page { position:relative; z-index:3; }
+    .wrap { max-width:980px; margin:0 auto; padding:0 28px; }
+    .hero { min-height:100vh; display:flex; flex-direction:column;
+            justify-content:center; padding:90px 0 64px; }
+    .eyebrow {
+      font-size:11px; font-weight:600; letter-spacing:2.5px;
+      text-transform:uppercase; color:var(--teal);
+      margin-bottom:20px; display:flex; align-items:center; gap:12px;
+    }
+    .eyebrow::before { content:''; width:32px; height:2px; background:var(--teal); display:block; }
+    h1 {
+      font-family:'Playfair Display',Georgia,serif;
+      font-size:clamp(50px,8.5vw,92px); font-weight:900;
+      letter-spacing:-3px; line-height:1.0; margin-bottom:14px;
+    }
+    h1 .accent {
+      background:linear-gradient(135deg,var(--teal) 0%,#00ffcc 50%,var(--teal) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-sub {
+      font-size:clamp(15px,2vw,18px); color:var(--gray); line-height:1.75;
+      max-width:700px; margin-bottom:32px;
+    }
+    .hero-sub strong { color:var(--white); font-weight:600; }
+    .tags { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:36px; }
+    .tag {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 14px; border-radius:20px;
+      font-size:12px; font-weight:600; letter-spacing:0.3px;
+    }
+    .tt { background:rgba(0,212,170,0.1); color:var(--teal); border:1px solid rgba(0,212,170,0.25); }
+    .tg { background:rgba(240,185,11,0.1); color:var(--gold); border:1px solid rgba(240,185,11,0.25); }
+    .tb { background:rgba(74,158,255,0.1); color:var(--blue); border:1px solid rgba(74,158,255,0.25); }
+    .live-wrap { display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:44px; }
+    .live {
+      display:inline-flex; align-items:center; gap:10px;
+      background:rgba(0,212,170,0.05); border:1px solid rgba(0,212,170,0.2);
+      border-radius:10px; padding:11px 20px;
+    }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--teal);
+           flex-shrink:0; animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,170,0.5)}
+      50%{opacity:.7;box-shadow:0 0 0 8px rgba(0,212,170,0)}
+    }
+    .live-lbl { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal); }
+    .live-price { font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; }
+    .live-chg { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--teal); }
+    .kpis { display:flex; flex-wrap:wrap; gap:24px; }
+    .kpi { display:flex; flex-direction:column; gap:2px; }
+    .kpi-l { font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); }
+    .kpi-v { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; }
+    .targets { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:64px; }
+    .tgt {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:12px; padding:22px; text-align:center;
+      position:relative; overflow:hidden;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .tgt:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(0,0,0,.35); }
+    .tgt::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+    .tgt.bull::after { background:linear-gradient(90deg,var(--gold),transparent); }
+    .tgt.base::after { background:linear-gradient(90deg,var(--teal),transparent); }
+    .tgt.bear::after { background:linear-gradient(90deg,var(--red),transparent); }
+    .tgt-l { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--dim); margin-bottom:8px; }
+    .tgt-p { font-family:'JetBrains Mono',monospace; font-size:34px; font-weight:700; }
+    .tgt-c { font-family:'JetBrains Mono',monospace; font-size:15px; margin-top:4px; }
+    .tgt-d { font-size:11px; color:var(--gray); margin-top:8px; line-height:1.5; }
+    .bull .tgt-p,.bull .tgt-c { color:var(--gold); }
+    .base .tgt-p,.base .tgt-c { color:var(--teal); }
+    .bear .tgt-p,.bear .tgt-c { color:var(--red); }
+    .div { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:64px 0; }
+    .stripe { height:3px; background:repeating-linear-gradient(90deg,var(--teal) 0,var(--teal) 18px,transparent 18px,transparent 36px); opacity:.18; border-radius:2px; margin:0 0 64px; }
+    .sec-l { font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); margin-bottom:8px; }
+    h2 { font-family:'Playfair Display',Georgia,serif; font-size:clamp(26px,3.5vw,38px); font-weight:700; letter-spacing:-1px; margin-bottom:28px; }
+    .thesis {
+      background:rgba(0,212,170,0.04); border:1px solid rgba(0,212,170,0.2);
+      border-radius:14px; padding:32px 36px; margin-bottom:28px;
+    }
+    .thesis p { font-size:16px; line-height:1.9; }
+    .tm { font-family:'JetBrains Mono',monospace; color:var(--teal); font-size:18px; font-weight:700; }
+    .gm { font-family:'JetBrains Mono',monospace; color:var(--gold); font-weight:700; }
+    .rm { font-family:'JetBrains Mono',monospace; color:var(--red); font-weight:700; }
+    .bullets { display:flex; flex-direction:column; gap:12px; margin-bottom:40px; }
+    .bl {
+      background:var(--card); border:1px solid var(--border);
+      border-left:3px solid var(--teal); border-radius:10px;
+      padding:18px 22px; font-size:14px; line-height:1.7; color:var(--gray);
+      transition:transform .2s;
+    }
+    .bl:hover { transform:translateX(4px); }
+    .bl:nth-child(2) { border-left-color:var(--gold); }
+    .bl:nth-child(3) { border-left-color:var(--blue); }
+    .bl strong { color:var(--white); font-weight:600; }
+    .delivs { display:flex; flex-direction:column; gap:12px; margin-bottom:8px; }
+    .deliv {
+      display:grid; grid-template-columns:36px 1fr auto;
+      align-items:center; gap:20px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:18px 24px;
+      transition:background .2s;
+    }
+    .deliv:hover { background:var(--card2); }
+    .dn { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--dim); font-weight:600; }
+    .dt { font-size:15px; font-weight:600; margin-bottom:3px; }
+    .dd { font-size:12px; color:var(--gray); }
+    .btn {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:9px 18px; border-radius:8px;
+      background:rgba(0,212,170,0.08); border:1px solid rgba(0,212,170,0.2);
+      color:var(--teal); font-size:13px; font-weight:600;
+      text-decoration:none; white-space:nowrap;
+      transition:background .2s, transform .15s;
+    }
+    .btn:hover { background:rgba(0,212,170,0.18); transform:scale(1.02); }
+    .btn.gold { background:rgba(240,185,11,0.08); border-color:rgba(240,185,11,0.2); color:var(--gold); }
+    .btn.gold:hover { background:rgba(240,185,11,0.18); }
+    .disc { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:8px; }
+    .disc-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:20px 22px;
+      position:relative; overflow:hidden; transition:transform .2s;
+    }
+    .disc-card:hover { transform:translateY(-2px); }
+    .disc-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--teal); }
+    .disc-card:nth-child(2)::before { background:var(--gold); }
+    .disc-card:nth-child(3)::before { background:var(--blue); }
+    .disc-card:nth-child(4)::before { background:var(--gray); }
+    .disc-n { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal); margin-bottom:8px; }
+    .disc-card:nth-child(2) .disc-n { color:var(--gold); }
+    .disc-card:nth-child(3) .disc-n { color:var(--blue); }
+    .disc-card:nth-child(4) .disc-n { color:var(--gray); }
+    .disc-v { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; margin-bottom:6px; }
+    .disc-t { font-size:13px; color:var(--gray); line-height:1.55; }
+    .judges { display:flex; flex-direction:column; gap:14px; }
+    .judge {
+      background:var(--card); border:1px solid var(--border);
+      border-left:3px solid var(--teal); border-radius:12px;
+      padding:22px 26px; display:grid; grid-template-columns:46px 1fr; gap:16px;
+      transition:transform .2s;
+    }
+    .judge:hover { transform:translateX(3px); }
+    .judge:nth-child(2) { border-left-color:var(--gold); }
+    .judge:nth-child(3) { border-left-color:var(--blue); }
+    .judge:nth-child(4) { border-left-color:var(--dim); }
+    .j-icon { font-size:28px; padding-top:2px; }
+    .j-name { font-size:16px; font-weight:700; margin-bottom:2px; }
+    .j-firm { font-size:11px; color:var(--gray); letter-spacing:.5px; text-transform:uppercase; font-weight:600; margin-bottom:10px; }
+    .j-text { font-size:14px; line-height:1.75; color:var(--gray); }
+    .j-text span { color:var(--teal); font-weight:600; }
+    .judge:nth-child(2) .j-text span { color:var(--gold); }
+    .judge:nth-child(3) .j-text span { color:var(--blue); }
+    .judge:nth-child(4) .j-text span { color:var(--white); font-weight:700; }
+    .steps { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+    .step { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 20px; }
+    .s-n { width:30px; height:30px; border-radius:50%; flex-shrink:0; background:rgba(0,212,170,0.1); border:1px solid rgba(0,212,170,0.2); color:var(--teal); font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .s-t { font-size:14px; color:var(--gray); }
+    .sources { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+    .src { padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--gray); }
+    .nt { background:rgba(0,212,170,0.04); border:1px solid rgba(0,212,170,0.12); border-radius:10px; padding:16px 24px; font-size:14px; color:var(--gray); text-align:center; }
+    .nt strong { color:var(--teal); }
+    .mtable { width:100%; border-collapse:collapse; margin-bottom:8px; }
+    .mtable th { text-align:left; padding:10px 14px; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); border-bottom:1px solid rgba(255,255,255,0.07); }
+    .mtable td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:14px; }
+    .mtable tr:last-child td { border-bottom:none; }
+    .mtable tr:hover td { background:rgba(0,212,170,0.025); }
+    .mtable .mn { font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:600; }
+    .mtable .ml { font-size:12px; color:var(--gray); }
+    .footer { padding:48px 0; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+    .f-prep { font-size:13px; color:var(--gray); line-height:1.7; }
+    .f-prep strong { color:var(--white); }
+    .f-date { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--dim); }
+    @media(max-width:640px) {
+      h1 { letter-spacing:-1.5px; }
+      .targets,.disc { grid-template-columns:1fr; }
+      .deliv { grid-template-columns:1fr; gap:10px; }
+      .judge { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
+<div class="mesh">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="spotlight" id="spotlight"></div>
+<canvas id="particles"></canvas>
+<div class="page">
+<div class="wrap">
 
-    <div class="header">
-        <h1>Intuitive Surgical (ISRG)</h1>
-        <p style="letter-spacing: 2px; text-transform: uppercase; color: #9ca3af;">Equity Research | Investment Thesis</p>
-        <div class="price-target">$617.00</div>
-        <p><em>The "Surgical Toll Road" Dominance Model</em></p>
-        <a href="https://www.perplexity.ai/computer/tasks/role-you-are-a-senior-buy-side-AA5nNebTSdijuRmd1XsgmA?view=thread#1" target="_blank" class="button">View Full Autonomous Research Workflow</a>
+  <section class="hero">
+    <div class="eyebrow">Intuitive Surgical, Inc. &nbsp;·&nbsp; NASDAQ: ISRG &nbsp;·&nbsp; Investment Thesis</div>
+    <h1>THE SURGICAL<br><span class="accent">TOLL ROAD</span></h1>
+    <p class="hero-sub">
+      <strong>Intuitive Surgical is the only public company that collects a mandatory toll on every robotic surgical procedure performed worldwide.</strong>
+      With 3.15 million procedures growing at a 17.4% 3-year CAGR and less than 5% of the $7.6T surgical market penetrated — the toll road has barely opened.
+    </p>
+    <div class="tags">
+      <span class="tag tt">BUY</span>
+      <span class="tag tt">HIGH CONVICTION</span>
+      <span class="tag tg">Perplexity Computer Stock Pitch Competition</span>
+      <span class="tag tb">March 30 – April 3, 2026</span>
     </div>
-
-    <div class="container">
-        <div class="card">
-            <h2>Full HTML Presentation</h2>
-            <p>Explore the detailed analysis of ISRG's recurring revenue and market share.</p>
-            <div class="embed-container">
-                <iframe src="ISRG_Pitch_FINAL.html"></iframe>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>2-Minute Pitch</h2>
-            <div class="embed-container">
-                <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
-            </div>
-        </div>
+    <div class="live-wrap">
+      <div class="live">
+        <div class="dot"></div>
+        <span class="live-lbl">Live</span>
+        <span class="live-price" id="livePrice">—</span>
+        <span class="live-chg" id="liveChg"></span>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="kpi-l">Mkt Cap</span><span class="kpi-v">~$160.8B</span></div>
+        <div class="kpi"><span class="kpi-l">PE TTM</span><span class="kpi-v">57.5x</span></div>
+        <div class="kpi"><span class="kpi-l">Fwd PE</span><span class="kpi-v" id="fwdPE">~37.5x</span></div>
+        <div class="kpi"><span class="kpi-l">EPS FY25</span><span class="kpi-v">$7.88</span></div>
+        <div class="kpi"><span class="kpi-l">52wk</span><span class="kpi-v">$425–$604</span></div>
+      </div>
     </div>
+    <div class="targets">
+      <div class="tgt bull">
+        <div class="tgt-l">Bull Case</div>
+        <div class="tgt-p">$841</div>
+        <div class="tgt-c" id="bullPct">—</div>
+        <div class="tgt-d">Accelerated DV5 adoption, new indications, ASC leasing expansion</div>
+      </div>
+      <div class="tgt base">
+        <div class="tgt-l">Base Case</div>
+        <div class="tgt-p">$617</div>
+        <div class="tgt-c" id="basePct">—</div>
+        <div class="tgt-d">Consensus growth rates, GM recovery to 67.5%, moderate expansion</div>
+      </div>
+      <div class="tgt bear">
+        <div class="tgt-l">Bear Case</div>
+        <div class="tgt-p">$292</div>
+        <div class="tgt-c" id="bearPct">—</div>
+        <div class="tgt-d">Multiple compression, slower growth, competition gains share</div>
+      </div>
+    </div>
+  </section>
 
+  <div class="stripe"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">The Thesis</div>
+    <h2>Three Lines. No Ambiguity.</h2>
+    <div class="thesis">
+      <p>ISRG collects a mandatory toll on every robotic surgical procedure performed worldwide.
+      <span class="tm">3.15M</span> procedures. <span class="gm">+17.4%</span> 3-year CAGR.
+      Proprietary instrument lock-in permitting <span class="rm">zero</span> third-party substitution.
+      Less than <span class="tm">5%</span> of the <span class="tm">$7.6T</span> global surgical market penetrated.
+      The toll road has barely opened.</p>
+    </div>
+    <div class="bullets">
+      <div class="bl"><strong>Lock-in:</strong> Proprietary instruments that <em>only</em> ISRG makes. Zero third-party substitution. The da Vinci system physically will not operate with non-ISRG instruments.</div>
+      <div class="bl"><strong>Recurring machine:</strong> 75% of $10.06B revenue is instrument &amp; accessory tolls. Each system placement starts a 10-year, $1.8M lifetime annuity. FY2026 consensus EPS ~$12.06 implies a 37.5x forward PE on accelerating earnings.</div>
+      <div class="bl"><strong>Compounding catalyst:</strong> da Vinci 5 super-cycle + cardiac clearance (Jan 2026) + Europe direct acquisition (Mar 2026) = three simultaneous growth accelerants with earnings print triggers not yet embedded in any sell-side model.</div>
+    </div>
+  </section>
+
+  <div class="div"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">Submission Package</div>
+    <h2>Deliverables</h2>
+    <div class="delivs">
+      <div class="deliv">
+        <div class="dn">01</div>
+        <div>
+          <div class="dt">&#x1F3A5;&nbsp; 2-Minute Video Walkthrough</div>
+          <div class="dd">Face-on-camera narration — thesis, Computer methodology, and autonomous discoveries. Uploaded to Google Drive.</div>
+        </div>
+        <a class="btn gold" href="YOUR_GOOGLE_DRIVE_MP4_URL_HERE" target="_blank">&#x25B6; Watch Video</a>
+      </div>
+      <div class="deliv">
+        <div class="dn">02</div>
+        <div>
+          <div class="dt">&#x1F4CA;&nbsp; 14-Slide Interactive Pitch Deck</div>
+          <div class="dd">Fully self-contained HTML. Live ISRG price feed. 25-scenario DCF. Gross margin recovery bridge. Dynamic upside calculations.</div>
+        </div>
+        <a class="btn" href="https://skipperbrown.github.io/ISRG-ANALYSIS/ISRG_Pitch_FINAL.html" target="_blank">&#x1F441; View Presentation</a>
+      </div>
+      <div class="deliv">
+        <div class="dn">03</div>
+        <div>
+          <div class="dt">&#x1F916;&nbsp; Perplexity Computer Research Thread</div>
+          <div class="dd">Complete autonomous 7-step research workflow — every data point traceable to primary source.</div>
+        </div>
+        <a class="btn" href="https://www.perplexity.ai/computer/tasks/role-you-are-a-senior-buy-side-_Ybq715FSVS.fS4EUMhC.A?view=thread#1" target="_blank">&#x1F517; View Autonomous Workflow</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="div"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">Computer-Surfaced Discoveries</div>
+    <h2>What Perplexity Computer Found Autonomously</h2>
+    <div class="disc">
+      <div class="disc-card">
+        <div class="disc-n">Primary Discovery · Usage-Based Leasing</div>
+        <div class="disc-v">150 / 532 = 28%</div>
+        <div class="disc-t">Q4 2025 da Vinci placements on usage-based leases. Reframes the entire capex objection. Opens ~6,000 US ASCs — a 23x TAM expansion hiding in one quarterly metric.</div>
+      </div>
+      <div class="disc-card">
+        <div class="disc-n">PitchBook Discovery · CMR Surgical</div>
+        <div class="disc-v">$1.43B raised / $48.7M rev</div>
+        <div class="disc-t">ISRG's lead challenger raised $1.43 billion to generate $48.7 million in revenue. The competitive moat quantified in one ratio by a live PitchBook query.</div>
+      </div>
+      <div class="disc-card">
+        <div class="disc-n">PitchBook Discovery · Momentis Surgical</div>
+        <div class="disc-v">$14.3M last round</div>
+        <div class="disc-t">Momentis last raised $14.3M in November 2025 — a small-round signal confirming mid-market challengers are not scaling.</div>
+      </div>
+      <div class="disc-card">
+        <div class="disc-n">Live Fetch · FY2026 Consensus EPS</div>
+        <div class="disc-v">~$12.06 EPS</div>
+        <div class="disc-t">FY2026 consensus EPS fetched live — confirms forward PE in real time, not from a stale static estimate. Enables dynamic PE calculation on every slide.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="div"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">Judge-Specific Analysis</div>
+    <h2>Why This Satisfies Each Judge</h2>
+    <div class="judges">
+      <div class="judge">
+        <div class="j-icon">&#x1F4C8;</div>
+        <div>
+          <div class="j-name">Philippe Laffont &mdash; Coatue Management</div>
+          <div class="j-firm">Compounder Framework</div>
+          <div class="j-text"><span>17.4% 3Y revenue CAGR</span>, <span>66% gross margins</span> recovering toward 68.5% by FY2027 following the identical da Vinci Xi post-launch compression pattern. <span>75% recurring revenue</span>, <span>$2.49B FCF</span> at 24.7% margin. Forward PE of 37.5x on accelerating EPS is a compounder premium fully justified by business quality. The gross margin story is not compression. It is the Xi precedent, repeated.</div>
+        </div>
+      </div>
+      <div class="judge">
+        <div class="j-icon">&#x26A1;</div>
+        <div>
+          <div class="j-name">Dan Loeb &mdash; Third Point</div>
+          <div class="j-firm">Catalyst Lens</div>
+          <div class="j-text">Three 2026 catalysts with <span>earnings print triggers not yet in consensus models</span>. Cardiac ramp: first quantifiable <span>Q1 2026 earnings print (April 2026)</span>. Europe direct margin: first full <span>Q2 2026 (July 2026)</span>. Usage-based inflection: <span>Q3 2026 target 35%+</span>. The clearances are public. The revenue they generate is not yet in any model. The re-rating events are the earnings prints.</div>
+        </div>
+      </div>
+      <div class="judge">
+        <div class="j-icon">&#x1F9E0;</div>
+        <div>
+          <div class="j-name">Ken Hao &mdash; Silver Lake</div>
+          <div class="j-firm">Technology Transformation Thesis</div>
+          <div class="j-text">ISRG captures <span>instrument tip position, force feedback vectors, and tissue compression events at millisecond resolution</span> — none published in academic literature. <span>CMR raised $1.43B to generate $48.7M revenue</span> (PitchBook). The <span>SureForm intelligent stapler</span> fires an AI algorithm thousands of times per procedure — embedding AI revenue inside every I&A consumable sold.</div>
+        </div>
+      </div>
+      <div class="judge">
+        <div class="j-icon">&#x1F4BB;</div>
+        <div>
+          <div class="j-name">Dmitry Shevelenko &mdash; Perplexity AI</div>
+          <div class="j-firm">Product Demonstration Lens</div>
+          <div class="j-text">The complete 14-slide institutional pitch — DCF, competitive stress test, 25-scenario sensitivity, gross margin recovery bridge, six bear case rebuttals, FDA catalyst timeline, PitchBook data, CB Insights citations, and live price feed — was built autonomously using <span>Perplexity Computer alone</span>. No Bloomberg Terminal. No Excel. No outside tools. <span>THIS is what the product can do.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="div"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">Research Methodology</div>
+    <h2>7-Step Autonomous Workflow</h2>
+    <div class="steps">
+      <div class="step"><div class="s-n">1</div><div class="s-t">Financial data collection &amp; verification — SEC EDGAR, FactSet, S&amp;P Global, LSEG</div></div>
+      <div class="step"><div class="s-n">2</div><div class="s-t">Competitive landscape mapping — 6 companies, 10 metrics, PitchBook private competitor funding data</div></div>
+      <div class="step"><div class="s-n">3</div><div class="s-t">DCF model construction — 25-scenario 5&times;5 sensitivity table with live price threshold</div></div>
+      <div class="step"><div class="s-n">4</div><div class="s-t">Catalyst identification &amp; timeline mapping — 6 discrete 2026 catalysts with Q-by-Q earnings print triggers</div></div>
+      <div class="step"><div class="s-n">5</div><div class="s-t">Bear case stress testing — 6 risks including gross margin recovery bridge (Xi precedent)</div></div>
+      <div class="step"><div class="s-n">6</div><div class="s-t">Competitive moat scoring — 6 normalized dimensions, radar chart, kinematic data specificity, named AI products</div></div>
+      <div class="step"><div class="s-n">7</div><div class="s-t">Presentation generation — 14-slide interactive HTML, live data visualizations, dynamic price feed</div></div>
+    </div>
+    <div class="sec-l" style="margin-top:28px;margin-bottom:12px;">Data Sources</div>
+    <div class="sources">
+      <span class="src">SEC EDGAR</span><span class="src">FactSet</span><span class="src">S&amp;P Global</span>
+      <span class="src">LSEG</span>
+      <span class="src" style="color:var(--teal);border-color:rgba(0,212,170,0.25);">Statista</span>
+      <span class="src" style="color:var(--gold);border-color:rgba(240,185,11,0.25);">PitchBook</span>
+      <span class="src" style="color:var(--blue);border-color:rgba(74,158,255,0.25);">CB Insights</span>
+      <span class="src">FDA 510(k) Database</span><span class="src">Perplexity Finance API</span>
+    </div>
+    <div class="nt"><strong>No Bloomberg Terminal. No Excel. No outside tools.</strong>&nbsp;&nbsp;Research conducted entirely using Perplexity Computer.</div>
+  </section>
+
+  <div class="div"></div>
+
+  <section style="padding:0 0 64px">
+    <div class="sec-l">Key Metrics</div>
+    <h2>FY2025 At a Glance</h2>
+    <table class="mtable">
+      <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>FY2025 Revenue</td><td class="mn">$10.06B</td><td class="ml">+20.5% YoY</td></tr>
+        <tr><td>3Y Revenue CAGR</td><td class="mn">17.4%</td><td class="ml">FY2022–FY2025</td></tr>
+        <tr><td>Gross Margin</td><td class="mn">66.0%</td><td class="ml">-146bp DV5 ramp — recovering toward 68.5% FY2027 (Xi precedent)</td></tr>
+        <tr><td>Operating Margin</td><td class="mn">29.3%</td><td class="ml">FY2025</td></tr>
+        <tr><td>Free Cash Flow</td><td class="mn">$2.49B</td><td class="ml">24.7% FCF margin</td></tr>
+        <tr><td>Procedures FY2025</td><td class="mn">3.15M</td><td class="ml">+17.5% YoY</td></tr>
+        <tr><td>Installed Base</td><td class="mn">11,106</td><td class="ml">systems globally</td></tr>
+        <tr><td>Recurring Revenue</td><td class="mn">75%</td><td class="ml">I&amp;A + Services segments</td></tr>
+        <tr><td>Usage-Based Leasing</td><td class="mn">28%</td><td class="ml">150 of 532 Q4 2025 placements</td></tr>
+        <tr><td>Ion Procedure Growth</td><td class="mn">~51%</td><td class="ml">FY2025 YoY — $3B additive TAM</td></tr>
+        <tr><td>Trailing PE</td><td class="mn">57.5x</td><td class="ml"></td></tr>
+        <tr><td>Forward PE</td><td class="mn">~37.5x</td><td class="ml">FY2026 consensus EPS ~$12.06</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="stripe"></div>
+
+  <footer class="footer">
+    <div class="f-prep">
+      Prepared for &nbsp;
+      <strong>Philippe Laffont</strong> · Coatue &nbsp;&nbsp;
+      <strong>Dan Loeb</strong> · Third Point &nbsp;&nbsp;
+      <strong>Ken Hao</strong> · Silver Lake &nbsp;&nbsp;
+      <strong>Dmitry Shevelenko</strong> · Perplexity AI
+    </div>
+    <div class="f-date">March 30, 2026</div>
+  </footer>
+
+</div>
+</div>
+
+<script>
+  document.addEventListener('mousemove', e => {
+    document.getElementById('spotlight').style.background =
+      `radial-gradient(650px circle at ${e.clientX}px ${e.clientY}px, rgba(0,212,170,0.05), transparent 40%)`;
+  });
+  (function(){
+    const c=document.getElementById('particles');
+    const ctx=c.getContext('2d');
+    let W=c.width=window.innerWidth, H=c.height=window.innerHeight;
+    window.addEventListener('resize',()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;});
+    const pts=Array.from({length:60},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
+      r:Math.random()*1.8+.5,a:Math.random()*.28+.06
+    }));
+    let mx=-9999,my=-9999;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+    (function tick(){
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p=>{
+        const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){const f=(140-d)/140*2;p.vx+=(dx/d)*f*.07;p.vy+=(dy/d)*f*.07;}
+        p.vx*=.98;p.vy*=.98;p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(0,212,170,${p.a})`;ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    })();
+  })();
+  const BASE=617,BULL=841,BEAR=292,CEPS=12.06;
+  async function fetchPrice(){
+    try{
+      const r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/ISRG?interval=1m&range=1d');
+      const d=await r.json();
+      return d?.chart?.result?.[0]?.meta?.regularMarketPrice||null;
+    }catch{return null;}
+  }
+  async function updatePrice(){
+    const p=await fetchPrice();
+    const eP=document.getElementById('livePrice');
+    const eC=document.getElementById('liveChg');
+    const ePE=document.getElementById('fwdPE');
+    const eBull=document.getElementById('bullPct');
+    const eBase=document.getElementById('basePct');
+    const eBear=document.getElementById('bearPct');
+    if(p){
+      eP.textContent='$'+p.toFixed(2);
+      const b=(((BASE/p)-1)*100).toFixed(1);
+      const bu=(((BULL/p)-1)*100).toFixed(1);
+      const be=(((BEAR/p)-1)*100).toFixed(1);
+      const pe=(p/CEPS).toFixed(1);
+      eC.textContent='+'+b+'% to base';
+      eBull.textContent='+'+bu+'%';
+      eBase.textContent='+'+b+'%';
+      eBear.textContent=be+'%';
+      ePE.textContent=pe+'x';
+    } else {
+      eP.textContent='DELAYED';eP.style.color='#f0b90b';
+      eBull.textContent='+85.8%';eBase.textContent='+36.2%';eBear.textContent='-35.5%';
+    }
+    setTimeout(updatePrice,300000);
+  }
+  updatePrice();
+</script>
 </body>
 </html>
