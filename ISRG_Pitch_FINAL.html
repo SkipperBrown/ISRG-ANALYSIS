@@ -1,1161 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISRG Investment Thesis — The Surgical Toll Road</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#0a0e17;--card:#141b2d;--card-alt:#1a2338;--teal:#00d4aa;--gold:#f0b90b;
---red:#ff4d6a;--blue:#4a9eff;--text:#f0f2f5;--gray:#8892a4;--border:rgba(0,212,170,0.15);
---font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
-}
-html{scroll-snap-type:y mandatory;scroll-behavior:smooth;overflow-x:hidden}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
-.slide{min-height:100vh;width:100%;scroll-snap-align:start;position:relative;padding:60px 80px;display:flex;flex-direction:column;overflow:hidden}
-.slide::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;background:linear-gradient(180deg,var(--teal),transparent 80%)}
-.slide::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:repeating-linear-gradient(90deg,var(--teal) 0,var(--teal) 8px,transparent 8px,transparent 16px);opacity:.3}
-h1{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1.05;color:var(--text)}
-h2{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:24px;color:var(--text)}
-h3{font-size:20px;font-weight:700;margin-bottom:12px;color:var(--text)}
-.label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray)}
-.mono{font-family:var(--font-mono)}
-.teal{color:var(--teal)}
-.gold{color:var(--gold)}
-.red{color:var(--red)}
-
-/* Nav dots */
-.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:100}
-.nav-dot{width:10px;height:10px;border-radius:50%;background:rgba(136,146,164,.3);cursor:pointer;transition:all .3s}
-.nav-dot.active{background:var(--teal);box-shadow:0 0 8px var(--teal)}
-.slide-counter{position:fixed;bottom:24px;right:24px;font-family:var(--font-mono);font-size:13px;color:var(--gray);z-index:100}
-
-/* Cards */
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px}
-.card-alt{background:var(--card-alt)}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
-.kpi-card .value{font-family:var(--font-mono);font-size:32px;font-weight:700;color:var(--teal)}
-.kpi-card .label{margin-top:6px}
-.kpi-card .sub{font-family:var(--font-mono);font-size:14px;color:var(--gray);margin-top:4px}
-
-/* Price badge */
-.price-badge{display:inline-flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:var(--font-mono);font-size:18px;font-weight:600}
-.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,170,.6)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(0,212,170,0)}}
-.delayed-dot{background:var(--gold);animation:none}
-.price-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
-
-/* BUY tag */
-.buy-tag{display:inline-block;background:var(--teal);color:var(--bg);font-weight:800;font-size:14px;letter-spacing:2px;padding:6px 18px;border-radius:4px;text-transform:uppercase}
-.verdict-tag{display:inline-block;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.verdict-manageable{background:rgba(0,212,170,.15);color:var(--teal)}
-.verdict-expander{background:rgba(74,158,255,.15);color:var(--blue)}
-.verdict-limited{background:rgba(240,185,11,.15);color:var(--gold)}
-.verdict-self{background:rgba(0,212,170,.15);color:var(--teal)}
-.verdict-additive{background:rgba(74,158,255,.15);color:var(--blue)}
-
-/* Tables */
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);border-bottom:1px solid var(--border)}
-td{padding:10px 12px;border-bottom:1px solid rgba(136,146,164,.1);font-family:var(--font-mono);font-size:13px}
-tr.highlight{background:rgba(0,212,170,.08)}
-tr.highlight td{color:var(--teal);font-weight:600}
-
-/* Sensitivity table */
-.sensitivity-table td,.sensitivity-table th{text-align:center;padding:8px 10px;font-size:13px}
-.sensitivity-table .above{background:rgba(0,212,170,.12);color:var(--teal)}
-.sensitivity-table .below{background:rgba(255,77,106,.12);color:var(--red)}
-
-/* Chart containers */
-.chart-container{position:relative;width:100%;max-width:100%}
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
-
-/* Flow diagram */
-.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:24px 0}
-.flow-node{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;text-align:center;min-width:160px}
-.flow-node .flow-title{font-weight:700;font-size:14px;margin-bottom:4px}
-.flow-node .flow-sub{font-family:var(--font-mono);font-size:12px;color:var(--gray)}
-.flow-arrow{font-size:24px;color:var(--teal);padding:0 8px;flex-shrink:0}
-
-/* Bear card */
-.bear-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
-.bear-header{background:rgba(255,77,106,.1);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-.bear-header h3{margin:0;font-size:15px;color:var(--red)}
-.bear-body{padding:16px 20px;font-size:14px;color:var(--gray);line-height:1.6}
-
-/* Price target cards */
-.target-cards{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap}
-.target-card{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.target-card.bear .value{color:var(--red)}
-.target-card.base .value{color:var(--teal)}
-.target-card.bull .value{color:var(--gold)}
-
-/* Responsive */
-@media(max-width:900px){
-.slide{padding:40px 24px}
-h1{font-size:32px}
-h2{font-size:24px}
-.chart-row{grid-template-columns:1fr}
-.flow{flex-direction:column;align-items:stretch}
-.flow-arrow{transform:rotate(90deg);text-align:center}
-.kpi-grid{grid-template-columns:1fr 1fr}
-}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--gray);border-radius:3px}
-
-/* Methodology steps */
-.method-step{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
-.step-num{width:32px;height:32px;border-radius:50%;background:var(--teal);color:var(--bg);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step-text{font-size:14px;color:var(--gray);line-height:1.5}
-
-/* Footnote */
-.footnote{font-size:11px;color:var(--gray);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);line-height:1.6}
-
-/* Two column */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-@media(max-width:900px){.two-col{grid-template-columns:1fr}}
-
-/* Timeline */
-.timeline{position:relative;padding-left:24px;margin:20px 0}
-.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--teal);opacity:.3}
-.timeline-item{position:relative;margin-bottom:20px;padding-left:20px}
-.timeline-item::before{content:'';position:absolute;left:-20px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--teal)}
-.timeline-item .date{font-family:var(--font-mono);font-size:12px;color:var(--teal);font-weight:600;margin-bottom:4px}
-.timeline-item .event{font-size:14px;color:var(--text)}
-.timeline-item .detail{font-size:12px;color:var(--gray);margin-top:4px}
-
-/* Catalyst cards */
-.catalyst-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-@media(max-width:900px){.catalyst-grid{grid-template-columns:1fr}}
-.catalyst-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
-.catalyst-card h3{font-size:14px;margin-bottom:8px}
-.catalyst-card p{font-size:13px;color:var(--gray);line-height:1.5}
-.catalyst-card .catalyst-tag{font-family:var(--font-mono);font-size:11px;color:var(--teal);margin-bottom:8px}
-</style>
-</head>
-<body>
-
-<!-- Navigation Dots -->
-<div class="nav-dots" id="navDots"></div>
-<div class="slide-counter" id="slideCounter">1 / 13</div>
-
-<!-- ===================== SLIDE 1: TITLE ===================== -->
-<div class="slide" id="slide-1">
-<div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1100px">
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap">
-<span class="label">INTUITIVE SURGICAL, INC.</span>
-<span class="label" style="color:var(--teal)">NASDAQ: ISRG</span>
-<span class="label">INVESTMENT THESIS</span>
-<div class="price-badge" style="margin-left:auto">
-<span class="pulse-dot" id="priceDot"></span>
-<span id="livePriceTitle">$---</span>
-<span class="price-label" id="priceStatusLabel">LIVE</span>
-</div>
-</div>
-
-<h1 style="margin-bottom:12px">THE SURGICAL<br>TOLL ROAD</h1>
-<p style="font-size:20px;color:var(--gray);font-weight:500;margin-bottom:28px">Every procedure. Every instrument. Every time.</p>
-
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap">
-<span class="buy-tag">BUY</span>
-<span class="label" style="color:var(--teal)">HIGH CONVICTION</span>
-</div>
-
-<div class="target-cards">
-<div class="target-card bear">
-<div class="label">Bear Case</div>
-<div class="value mono" style="font-size:28px;font-weight:700">$292</div>
-<div class="mono" style="font-size:14px;margin-top:4px" id="bearPctTitle">---</div>
-</div>
-<div class="target-card base">
-<div class="label">Base Case</div>
-<div class="value mono" style="font-size:28px;font-weight:700">$617</div>
-<div class="mono" style="font-size:14px;margin-top:4px" id="basePctTitle">---</div>
-</div>
-<div class="target-card bull">
-<div class="label">Bull Case</div>
-<div class="value mono" style="font-size:28px;font-weight:700">$841</div>
-<div class="mono" style="font-size:14px;margin-top:4px" id="bullPctTitle">---</div>
-</div>
-</div>
-
-<div class="kpi-grid" style="margin-top:20px">
-<div class="kpi-card"><div class="label">Mkt Cap</div><div class="value" style="font-size:20px">$160.8B</div></div>
-<div class="kpi-card"><div class="label">PE TTM</div><div class="value" style="font-size:20px">57.5x</div></div>
-<div class="kpi-card"><div class="label">EPS FY2025</div><div class="value" style="font-size:20px">$7.88</div></div>
-<div class="kpi-card"><div class="label">Consensus PT</div><div class="value" style="font-size:20px">$624</div></div>
-<div class="kpi-card"><div class="label">52-Wk Range</div><div class="value" style="font-size:20px">$425 &ndash; $604</div></div>
-</div>
-
-<div class="card" style="margin-top:20px;background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.2)">
-<p style="font-size:15px;color:var(--text);font-weight:500"><span class="mono teal">3.15 million</span> procedures in FY2025. Each one requires proprietary instruments that only Intuitive makes.</p>
-</div>
-
-<div style="margin-top:24px">
-<p class="label" style="font-size:10px">Prepared for: Philippe Laffont &middot; Dan Loeb &middot; Ken Hao &middot; Dmitry Shevelenko</p>
-<p class="label" style="font-size:10px;margin-top:4px">March 30, 2026</p>
-</div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 2: TOLL ROAD MODEL ===================== -->
-<div class="slide" id="slide-2">
-<h2>The Toll Road Model</h2>
-<p class="label" style="margin-bottom:20px">HOW ISRG COLLECTS A MANDATORY TOLL ON EVERY PROCEDURE</p>
-
-<div class="flow">
-<div class="flow-node"><div class="flow-title">System Placement</div><div class="flow-sub">$1.5 &ndash; 2.5M</div></div>
-<div class="flow-arrow">&rarr;</div>
-<div class="flow-node"><div class="flow-title">Locked Ecosystem</div><div class="flow-sub">Proprietary Only</div></div>
-<div class="flow-arrow">&rarr;</div>
-<div class="flow-node"><div class="flow-title">Mandatory I&amp;A</div><div class="flow-sub">$800 &ndash; 3,500/proc</div></div>
-<div class="flow-arrow">&rarr;</div>
-<div class="flow-node" style="border-color:var(--teal)"><div class="flow-title teal">10-Year Annuity</div><div class="flow-sub">$1.8M lifetime</div></div>
-</div>
-
-<div class="kpi-grid" style="margin-top:20px">
-<div class="kpi-card"><div class="value">75%</div><div class="label">Recurring Revenue</div><div class="sub">I&amp;A + Services</div></div>
-<div class="kpi-card"><div class="value">$1.8M</div><div class="label">Lifetime I&amp;A</div><div class="sub">Per system placed</div></div>
-<div class="kpi-card"><div class="value">0%</div><div class="label">Third-Party Substitution</div><div class="sub">Physically impossible</div></div>
-</div>
-
-<div class="two-col" style="margin-top:24px">
-<div class="card">
-<h3>Revenue Mix FY2025</h3>
-<div class="chart-container" style="height:220px">
-<canvas id="revenueDonut"></canvas>
-</div>
-</div>
-<div class="card card-alt">
-<h3>Competitive Structure</h3>
-<p style="font-size:13px;color:var(--gray);line-height:1.7;margin-top:8px">
-<strong style="color:var(--text)">FANUC / ABB / Yaskawa</strong> sell industrial hardware one-time. No consumable revenue stream.<br><br>
-<strong style="color:var(--text)">Stryker Mako</strong> uses competitive third-party implants. Hospital can substitute. No toll.<br><br>
-<strong style="color:var(--text)">Teradyne UR cobots</strong> have zero consumable revenue. One-time hardware sale.<br><br>
-<strong class="teal">Only ISRG</strong> collects a mandatory toll on every procedure. The da Vinci system physically cannot operate with non-ISRG instruments.
-</p>
-</div>
-</div>
-
-<p class="footnote">Recurring revenue defined as I&amp;A + Services segments (75.4% of FY2025 revenue).</p>
-</div>
-
-<!-- ===================== SLIDE 3: COMPETITIVE MOAT ===================== -->
-<div class="slide" id="slide-3">
-<h2>Competitive Moat</h2>
-<p class="label" style="margin-bottom:16px">6-COMPANY COMPARISON &mdash; 8 METRICS</p>
-
-<div style="overflow-x:auto">
-<table>
-<thead>
-<tr>
-<th>Company</th><th>3Y Rev CAGR</th><th>Gross Margin</th><th>Op Margin</th><th>Recurring Rev %</th><th>Trailing PE</th><th>Forward PE</th><th>EV/EBITDA</th><th>FCF Margin</th>
-</tr>
-</thead>
-<tbody>
-<tr class="highlight">
-<td style="font-family:var(--font-body);font-weight:700">ISRG</td><td>17.4%</td><td>66.0%</td><td>29.3%</td><td>75%</td><td>57.5x</td><td>37.5x</td><td>53.9x</td><td>24.7%</td>
-</tr>
-<tr>
-<td style="font-family:var(--font-body)">Stryker (SYK)</td><td>10.8%</td><td>64.0%</td><td>19.5%</td><td>~35%</td><td>39.2x</td><td>27.4x</td><td>23.7x</td><td>17.1%</td>
-</tr>
-<tr>
-<td style="font-family:var(--font-body)">Teradyne (TER)</td><td>0.4%</td><td>58.2%</td><td>20.4%</td><td>~15%</td><td>90.1x</td><td>44.1x</td><td>38.8x</td><td>14.1%</td>
-</tr>
-<tr>
-<td style="font-family:var(--font-body)">FANUC (FANUY)~</td><td>~4%</td><td>~35%</td><td>~18%</td><td>~20%</td><td>~35x</td><td>~30x</td><td>~22x</td><td>~12%</td>
-</tr>
-<tr>
-<td style="font-family:var(--font-body)">ABB (ABNNY)~</td><td>~6%</td><td>~36%</td><td>~17%</td><td>~25%</td><td>~28x</td><td>~24x</td><td>~18x</td><td>~11%</td>
-</tr>
-<tr>
-<td style="font-family:var(--font-body)">Yaskawa (YASKY)~</td><td>~5%</td><td>~33%</td><td>~10%</td><td>~15%</td><td>~32x</td><td>~27x</td><td>~20x</td><td>~8%</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-<div class="two-col" style="margin-top:20px">
-<div class="card">
-<h3>Recurring Revenue Comparison</h3>
-<div class="chart-container" style="height:200px">
-<canvas id="recurringBarChart"></canvas>
-</div>
-</div>
-<div class="card card-alt">
-<h3 style="margin-bottom:12px">Moat Conclusion</h3>
-<p style="font-size:14px;color:var(--gray);line-height:1.6">ISRG's moat is not the robot. It is the <strong class="teal">15M+ procedures of training data</strong>, the proprietary instrument lock-in, and the surgeon workflow dependency that makes switching costs effectively infinite.</p>
-</div>
-</div>
-
-<p class="footnote">FANUY, ABNNY, YASKY: Estimated from public annual reports. Primary-source verification unavailable via Perplexity finance tools. SYK, TER: Sourced from Perplexity Finance (FactSet, S&amp;P Global).</p>
-</div>
-
-<!-- ===================== SLIDE 4: FINANCIAL PERFORMANCE ===================== -->
-<div class="slide" id="slide-4">
-<h2>Financial Performance</h2>
-<p class="label" style="margin-bottom:16px">FY2025 CORE METRICS</p>
-
-<div class="kpi-grid">
-<div class="kpi-card">
-<div class="value" style="font-size:24px">$10.06B</div>
-<div class="label">Revenue</div>
-<div class="sub">+20.5% 1Y / +17.4% 3Y CAGR</div>
-</div>
-<div class="kpi-card">
-<div class="value" style="font-size:24px">66.0%</div>
-<div class="label">Gross Margin</div>
-<div class="sub" style="color:var(--red)">-146bp YoY</div>
-</div>
-<div class="kpi-card">
-<div class="value" style="font-size:24px">29.3%</div>
-<div class="label">Operating Margin</div>
-<div class="sub">&nbsp;</div>
-</div>
-<div class="kpi-card">
-<div class="value" style="font-size:24px">$2.49B</div>
-<div class="label">Free Cash Flow</div>
-<div class="sub">24.7% margin</div>
-</div>
-</div>
-
-<div class="chart-row" style="margin-top:16px">
-<div class="card">
-<h3>Quarterly Revenue (FY2024 &ndash; FY2025)</h3>
-<div class="chart-container" style="height:280px">
-<canvas id="quarterlyRevenueChart"></canvas>
-</div>
-</div>
-<div class="card">
-<h3>Procedures &amp; Installed Base</h3>
-<div class="chart-container" style="height:280px">
-<canvas id="procedureChart"></canvas>
-</div>
-</div>
-</div>
-
-<p class="footnote">GM compression of -146bp driven by DV5 ramp costs and manufacturing scale-up. Expected to normalize as production scales. Source: ISRG FY2025 10-K, Perplexity Finance.</p>
-</div>
-
-<!-- ===================== SLIDE 5: PROCEDURE FLYWHEEL ===================== -->
-<div class="slide" id="slide-5">
-<h2>Procedure Flywheel</h2>
-<p class="label" style="margin-bottom:16px">PER-SYSTEM REVENUE MATHEMATICS</p>
-
-<div class="kpi-grid">
-<div class="kpi-card"><div class="value" style="font-size:22px">10,636</div><div class="label">Avg Installed Base</div></div>
-<div class="kpi-card"><div class="value" style="font-size:22px">$7.59B</div><div class="label">I&amp;A + Services Rev</div></div>
-<div class="kpi-card"><div class="value" style="font-size:22px">~$714K</div><div class="label">Per System / Year</div></div>
-<div class="kpi-card"><div class="value" style="font-size:22px">3.15M</div><div class="label">Total Procedures</div></div>
-</div>
-
-<div class="two-col" style="margin-top:20px">
-<div class="card">
-<h3>Quarterly Revenue Growth (YoY)</h3>
-<div class="chart-container" style="height:220px">
-<canvas id="qtrGrowthChart"></canvas>
-</div>
-</div>
-<div class="card card-alt">
-<h3>The Flywheel</h3>
-<div style="margin-top:12px">
-<div class="flow" style="flex-direction:column;gap:12px">
-<div class="flow-node" style="width:100%"><div class="flow-title">New System Placement</div><div class="flow-sub">~300 procedures/year capacity</div></div>
-<div style="text-align:center;color:var(--teal);font-size:20px">&darr;</div>
-<div class="flow-node" style="width:100%"><div class="flow-title">Mandatory I&amp;A Consumption</div><div class="flow-sub">$800 &ndash; $3,500 per procedure</div></div>
-<div style="text-align:center;color:var(--teal);font-size:20px">&darr;</div>
-<div class="flow-node" style="width:100%"><div class="flow-title">Hospital Pushes Utilization</div><div class="flow-sub">ROI drives volume maximization</div></div>
-<div style="text-align:center;color:var(--teal);font-size:20px">&darr;</div>
-<div class="flow-node" style="width:100%;border-color:var(--teal)"><div class="flow-title teal">More Procedures = More Toll Revenue</div><div class="flow-sub">Compounding annuity stream</div></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 6: BUSINESS MODEL EVOLUTION ===================== -->
-<div class="slide" id="slide-6">
-<h2>Business Model Evolution</h2>
-<p class="label" style="margin-bottom:16px">USAGE-BASED LEASING &amp; ASC EXPANSION</p>
-
-<div class="kpi-grid">
-<div class="kpi-card">
-<div class="value" style="font-size:22px">28%</div>
-<div class="label">Usage-Based Leases</div>
-<div class="sub">150 of 532 Q4 2025 placements</div>
-</div>
-<div class="kpi-card">
-<div class="value" style="font-size:22px">~6,000</div>
-<div class="label">US ASCs</div>
-<div class="sub">~250 currently robotic-capable</div>
-</div>
-<div class="kpi-card">
-<div class="value" style="font-size:22px">23x</div>
-<div class="label">ASC TAM Expansion</div>
-<div class="sub">Capex barrier removed</div>
-</div>
-</div>
-
-<div class="two-col" style="margin-top:20px">
-<div class="card">
-<h3>Usage-Based Model</h3>
-<p style="font-size:14px;color:var(--gray);line-height:1.7;margin-top:8px">
-150 of 532 Q4 2025 da Vinci placements = 28% on usage-based leasing. This removes the $1.5 &ndash; 2.5M upfront capex barrier entirely, converting capital expenditure into a per-procedure operating line.<br><br>
-For ASCs operating on thin margins, this is transformative. The same mechanism that creates hospital budget pressure simultaneously creates ISRG's solution.
-</p>
-</div>
-<div class="card card-alt">
-<h3>Toll Road Acceleration</h3>
-<div class="flow" style="flex-direction:column;gap:10px;margin-top:8px">
-<div class="flow-node" style="width:100%;background:rgba(255,77,106,.05);border-color:rgba(255,77,106,.2)"><div class="flow-title" style="color:var(--red)">Capex Barrier Removed</div><div class="flow-sub">Usage-based converts capex to opex</div></div>
-<div style="text-align:center;color:var(--teal);font-size:18px">&darr;</div>
-<div class="flow-node" style="width:100%"><div class="flow-title">Faster Installed Base Growth</div><div class="flow-sub">ASCs + community hospitals enter ecosystem</div></div>
-<div style="text-align:center;color:var(--teal);font-size:18px">&darr;</div>
-<div class="flow-node" style="width:100%"><div class="flow-title">Procedure Volume Compounds</div><div class="flow-sub">More systems = more toll collection points</div></div>
-<div style="text-align:center;color:var(--teal);font-size:18px">&darr;</div>
-<div class="flow-node" style="width:100%;border-color:var(--teal)"><div class="flow-title teal">Recurring Revenue Flywheel</div><div class="flow-sub">75% recurring &rarr; trending toward 80%</div></div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 7: FDA CATALYST WAVE ===================== -->
-<div class="slide" id="slide-7">
-<h2>FDA Catalyst Wave</h2>
-<p class="label" style="margin-bottom:16px">FOUR CLEARANCES COMPOUNDING THE TOLL ROAD</p>
-
-<div class="timeline">
-<div class="timeline-item">
-<div class="date">March 14, 2024</div>
-<div class="event"><strong>da Vinci 5 General Clearance</strong> &mdash; FDA K232610</div>
-<div class="detail">10,000x compute vs prior gen, force feedback, 150 instrument compatibility. Each DV5 placement starts a new 10-year toll annuity.</div>
-</div>
-<div class="timeline-item">
-<div class="date">December 2, 2025</div>
-<div class="event"><strong>da Vinci SP Expanded Indications</strong> &mdash; FDA K252069</div>
-<div class="detail">Single-port platform, new anatomical indications. Expands procedure volume into new surgical areas.</div>
-</div>
-<div class="timeline-item">
-<div class="date">January 2026</div>
-<div class="event"><strong>da Vinci 5 Cardiac Clearance</strong></div>
-<div class="detail">Opens $12B cardiac surgery TAM. Less than 1% current robotic penetration. ~350K annual US cardiac procedures. Highest I&amp;A per procedure.</div>
-</div>
-<div class="timeline-item">
-<div class="date">March 2, 2026</div>
-<div class="event"><strong>Europe Direct Distribution</strong> &mdash; EUR 319M Acquisition</div>
-<div class="detail">Italy, Spain, Portugal. 470 systems acquired. Eliminates distributor margin (20 &ndash; 30%), recaptures $15 &ndash; 25M annually.</div>
-</div>
-</div>
-
-<div class="card" style="margin-top:12px;background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.2)">
-<h3 class="teal" style="font-size:14px;margin-bottom:8px">Toll-Road Math Per New Indication</h3>
-<p style="font-size:13px;color:var(--gray);line-height:1.6">New indication &rarr; X procedures/year &rarr; $800 &ndash; $3,500 I&amp;A each &rarr; installed base grows &rarr; compounding annuity &rarr; <strong class="teal">PERPETUAL</strong></p>
-</div>
-
-<div class="kpi-grid" style="margin-top:16px">
-<div class="kpi-card"><div class="value" style="font-size:20px">3.15M</div><div class="label">FY2025 Procedures</div></div>
-<div class="kpi-card"><div class="value" style="font-size:20px">+17.5%</div><div class="label">Procedure Growth</div></div>
-<div class="kpi-card"><div class="value" style="font-size:20px">11,106</div><div class="label">Installed Systems</div></div>
-<div class="kpi-card"><div class="value" style="font-size:20px">&lt;5%</div><div class="label">Market Penetrated</div></div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 8: GEOGRAPHIC TAM ===================== -->
-<div class="slide" id="slide-8">
-<h2>Geographic &amp; TAM Expansion</h2>
-<p class="label" style="margin-bottom:16px">$7.6T GLOBAL SURGICAL MARKET &mdash; LESS THAN 5% ROBOTIC PENETRATION</p>
-
-<div class="two-col">
-<div>
-<div class="card" style="margin-bottom:16px">
-<h3>Europe Direct Distribution</h3>
-<div class="kpi-grid" style="grid-template-columns:1fr 1fr;margin-top:12px">
-<div><span class="label">Coverage</span><p class="mono" style="font-size:14px;margin-top:4px">Italy, Spain, Portugal</p></div>
-<div><span class="label">Price</span><p class="mono" style="font-size:14px;margin-top:4px">EUR 319M</p></div>
-<div><span class="label">Closed</span><p class="mono" style="font-size:14px;margin-top:4px">March 2, 2026</p></div>
-<div><span class="label">Systems</span><p class="mono" style="font-size:14px;margin-top:4px">470 acquired</p></div>
-</div>
-</div>
-<div class="card card-alt">
-<h3>Margin Expansion Logic</h3>
-<p style="font-size:13px;color:var(--gray);line-height:1.6;margin-top:8px">Distributor margins of 20 &ndash; 30% recaptured on all I&amp;A and service revenue across the 470-system base. Estimated ~$15 &ndash; 25M annual improvement, compounding as installed base grows in these markets.</p>
-</div>
-</div>
-<div>
-<div class="card">
-<h3>TAM by Indication</h3>
-<div style="overflow-x:auto;margin-top:8px">
-<table>
-<thead><tr><th>Indication</th><th>US Annual</th><th>Robotic %</th><th>Stage</th></tr></thead>
-<tbody>
-<tr><td style="font-family:var(--font-body)">General Surgery</td><td>6M</td><td>~8%</td><td><span class="teal">Massive</span></td></tr>
-<tr><td style="font-family:var(--font-body)">Urology</td><td>800K</td><td>~85%</td><td>Mature</td></tr>
-<tr><td style="font-family:var(--font-body)">Gynecology</td><td>2.5M</td><td>~30%</td><td><span class="teal">Large</span></td></tr>
-<tr><td style="font-family:var(--font-body)">Thoracic</td><td>400K</td><td>~15%</td><td>Growing</td></tr>
-<tr><td style="font-family:var(--font-body)">Cardiac</td><td>700K</td><td>&lt;2%</td><td><span class="gold">Greenfield</span></td></tr>
-<tr><td style="font-family:var(--font-body)">Colorectal</td><td>600K</td><td>~20%</td><td>Expanding</td></tr>
-<tr><td style="font-family:var(--font-body)">Head &amp; Neck</td><td>300K</td><td>&lt;5%</td><td>Early</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-
-<div class="card" style="margin-top:16px;background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.2);text-align:center">
-<p style="font-size:16px;font-weight:600"><span class="mono teal">$7.6T</span> global surgical TAM &middot; <span class="mono teal">&lt;5%</span> robotic penetration &middot; <span class="mono teal">Ion $3B</span> additive TAM</p>
-</div>
-</div>
-
-<!-- ===================== SLIDE 9: DCF VALUATION ===================== -->
-<div class="slide" id="slide-9">
-<h2>DCF Valuation</h2>
-<p class="label" style="margin-bottom:16px">25-SCENARIO SENSITIVITY ANALYSIS</p>
-
-<div class="target-cards">
-<div class="target-card bear"><div class="label">Bear Case</div><div class="value mono" style="font-size:28px;font-weight:700">$292</div><div class="mono" style="font-size:14px;margin-top:4px" id="bearPctDCF">---</div></div>
-<div class="target-card base"><div class="label">Base Case</div><div class="value mono" style="font-size:28px;font-weight:700">$617</div><div class="mono" style="font-size:14px;margin-top:4px" id="basePctDCF">---</div></div>
-<div class="target-card bull"><div class="label">Bull Case</div><div class="value mono" style="font-size:28px;font-weight:700">$841</div><div class="mono" style="font-size:14px;margin-top:4px" id="bullPctDCF">---</div></div>
-</div>
-
-<div class="card" style="margin-top:16px">
-<h3>5x5 Sensitivity Table <span class="mono" style="font-size:12px;color:var(--gray);margin-left:8px" id="dcfLiveNote">Current: $---</span></h3>
-<div style="overflow-x:auto;margin-top:12px">
-<table class="sensitivity-table" id="sensitivityTable">
-<thead>
-<tr><th>Rev Growth \ WACC</th><th>8.5%</th><th>9.0%</th><th>9.5%</th><th>10.0%</th><th>10.5%</th></tr>
-</thead>
-<tbody id="sensitivityBody">
-</tbody>
-</table>
-</div>
-<p class="mono" style="font-size:13px;margin-top:12px;color:var(--gray)" id="dcfSummary"></p>
-</div>
-
-<div class="card" style="margin-top:16px">
-<h3>Price Targets vs. Current Price</h3>
-<div class="chart-container" style="height:240px">
-<canvas id="priceTargetChart"></canvas>
-</div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 10: COMPETITIVE STRESS TEST ===================== -->
-<div class="slide" id="slide-10">
-<h2>Competitive Stress Test</h2>
-<p class="label" style="margin-bottom:16px">MULTI-FRAMEWORK VERDICT</p>
-
-<div class="card" style="margin-bottom:20px">
-<h3>Radar: ISRG vs SYK vs TER</h3>
-<div class="chart-container" style="height:320px;max-width:480px;margin:0 auto">
-<canvas id="radarChart"></canvas>
-</div>
-</div>
-
-<div class="card card-alt">
-<h3 style="margin-bottom:12px">Three-Judge Verdict</h3>
-<p style="font-size:14px;line-height:1.7;color:var(--gray)">
-<strong class="teal">Laffont (Compounder):</strong> Which company satisfies 20%+ CAGR, expanding margins, and 70%+ recurring revenue? Only ISRG. SYK grows at 10.8% with 35% recurring. TER is nearly flat. No other company in the comp set meets all three criteria simultaneously.<br><br>
-<strong style="color:var(--gold)">Loeb (Catalyst):</strong> Which has the most discrete near-term catalysts? ISRG: three simultaneous re-rating events in 2026 (cardiac clearance ramp, Europe direct margin capture, usage-based penetration acceleration). No competitor has this catalyst density.<br><br>
-<strong style="color:var(--blue)">Hao (Technology Moat):</strong> Which has an irreplicable data moat? ISRG: 15M+ procedures of proprietary training data, instrument lock-in, and surgeon workflow dependency. Competitors would need a decade and billions of dollars to replicate. The moat is widening, not narrowing.
-</p>
-</div>
-</div>
-
-<!-- ===================== SLIDE 11: BEAR CASE REBUTTAL ===================== -->
-<div class="slide" id="slide-11">
-<h2>Bear Case Rebuttal</h2>
-<p class="label" style="margin-bottom:16px">FIVE RISKS. FIVE SPECIFIC DATA-DRIVEN REBUTTALS.</p>
-
-<div class="bear-card">
-<div class="bear-header"><h3>1. Valuation (57.5x Trailing PE)</h3><span class="verdict-tag verdict-manageable">MANAGEABLE</span></div>
-<div class="bear-body">Forward PE is 37.5x on accelerating EPS. 75% recurring revenue compounders at 17 &ndash; 20% CAGR with expanding FCF command premium multiples. SaaS peers at similar growth profiles trade at 35 &ndash; 50x forward earnings. Cash &amp; STI of $5.93B provides additional margin of safety.</div>
-</div>
-
-<div class="bear-card">
-<div class="bear-header"><h3>2. Competition (Hugo, Versius, Ottava)</h3><span class="verdict-tag verdict-expander">MARKET EXPANDER</span></div>
-<div class="bear-body">Hugo has fewer than 200 placements globally. Versius has approximately 150 systems. Ottava is delayed to 2027+. All are pre-scale with limited procedure libraries. ISRG's 15M+ cumulative procedures of training data is irreplicable. Surgeon retraining requires 100+ supervised cases, and no hospital absorbs that cost. Competitors expand surgeon interest while ISRG captures the procedures.</div>
-</div>
-
-<div class="bear-card">
-<div class="bear-header"><h3>3. China Tariff Exposure</h3><span class="verdict-tag verdict-limited">LIMITED</span></div>
-<div class="bear-body">China represents less than 5% of ISRG total revenue. US manufacturing base insulates from tariff risk. The Europe direct acquisition improves geographic diversification and control simultaneously, reducing single-market concentration risk.</div>
-</div>
-
-<div class="bear-card">
-<div class="bear-header"><h3>4. Hospital Capex Budget Pressure</h3><span class="verdict-tag verdict-self">SELF-SOLVING</span></div>
-<div class="bear-body">Usage-based leasing converts the $1.5 &ndash; 2.5M capex objection into a per-procedure opex line. 28% of Q4 2025 placements (150 of 532) already on usage-based model. The mechanism that creates budget pressure simultaneously creates ISRG's solution.</div>
-</div>
-
-<div class="bear-card">
-<div class="bear-header"><h3>5. Ion Cannibalization Risk</h3><span class="verdict-tag verdict-additive">ADDITIVE</span></div>
-<div class="bear-body">Ion targets a separate $3B bronchoscopy TAM with ~51% FY2025 procedure growth (144,100 procedures, up from 95,500 in FY2024). Uses proprietary single-use catheters following the identical toll-road model. Adds a second independent annuity stream. No da Vinci procedure category overlap.</div>
-</div>
-</div>
-
-<!-- ===================== SLIDE 12: INVESTMENT CONCLUSION ===================== -->
-<div class="slide" id="slide-12">
-<h2>Investment Conclusion</h2>
-<p style="font-size:24px;font-weight:700;color:var(--teal);margin-bottom:20px">The Toll Road Has Barely Opened</p>
-
-<div class="two-col">
-<div>
-<div class="card" style="margin-bottom:16px">
-<h3>Five-Point Thesis</h3>
-<ol style="font-size:14px;color:var(--gray);line-height:1.8;padding-left:20px;margin-top:8px">
-<li><strong style="color:var(--text)">Mandatory Toll:</strong> 75% recurring revenue from proprietary I&amp;A that physically cannot be substituted</li>
-<li><strong style="color:var(--text)">Compounding Annuity:</strong> Each new system starts a 10-year, $1.8M lifetime revenue stream</li>
-<li><strong style="color:var(--text)">Catalyst Density:</strong> Three simultaneous re-rating events in 2026 (cardiac, Europe direct, leasing)</li>
-<li><strong style="color:var(--text)">TAM Expansion:</strong> Less than 5% of $7.6T global surgical market penetrated by robotics</li>
-<li><strong style="color:var(--text)">Second Toll Booth:</strong> Ion platform adds $3B bronchoscopy TAM with ~51% growth</li>
-</ol>
-</div>
-
-<div class="card card-alt">
-<h3>Risk/Reward</h3>
-<div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
-<div style="flex:1;text-align:center;padding:12px;background:rgba(240,185,11,.08);border-radius:8px">
-<div class="mono gold" style="font-size:24px;font-weight:700" id="bullUpsideConc">+80%</div>
-<div class="label">Bull Upside</div>
-</div>
-<div style="flex:1;text-align:center;padding:12px;background:rgba(255,77,106,.08);border-radius:8px">
-<div class="mono red" style="font-size:24px;font-weight:700" id="bearDownsideConc">-37%</div>
-<div class="label">Bear Downside</div>
-</div>
-</div>
-<p class="mono" style="font-size:13px;color:var(--gray);margin-top:12px;text-align:center">Position Sizing: 3 &ndash; 5% Portfolio Allocation</p>
-</div>
-</div>
-<div>
-<div class="card">
-<h3>12-Month Catalyst Calendar</h3>
-<div class="timeline" style="margin-top:8px">
-<div class="timeline-item"><div class="date">Q1 2026</div><div class="event">DV5 cardiac ramp metrics</div><div class="detail">First full quarter post-clearance</div></div>
-<div class="timeline-item"><div class="date">Q2 2026</div><div class="event">Europe direct margin impact</div><div class="detail">First full quarter post-close</div></div>
-<div class="timeline-item"><div class="date">Q3 2026</div><div class="event">Usage-based leasing rate</div><div class="detail">Target 35%+ of placements</div></div>
-<div class="timeline-item"><div class="date">Q4 2026</div><div class="event">Installed base milestone</div><div class="detail">Target 12,000 systems</div></div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="card" style="margin-top:16px;background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.2);text-align:center">
-<p style="font-size:15px;font-weight:600;line-height:1.6">ISRG is the only stock that simultaneously satisfies Laffont's compounder framework, Loeb's catalyst lens, and Hao's technology transformation thesis.</p>
-</div>
-</div>
-
-<!-- ===================== SLIDE 13: METHODOLOGY ===================== -->
-<div class="slide" id="slide-13">
-<h2>Methodology</h2>
-<p style="font-size:22px;font-weight:700;color:var(--teal);margin-bottom:20px">Powered by Perplexity Computer</p>
-
-<div class="two-col">
-<div>
-<h3 style="margin-bottom:16px">7-Step Autonomous Workflow</h3>
-<div class="method-step"><div class="step-num">1</div><div class="step-text"><strong>Financial data collection &amp; verification</strong><br>SEC EDGAR, FactSet, S&amp;P Global, LSEG via Perplexity finance tools</div></div>
-<div class="method-step"><div class="step-num">2</div><div class="step-text"><strong>Competitive landscape mapping</strong><br>6 companies, 8 metrics, cross-verified against primary sources</div></div>
-<div class="method-step"><div class="step-num">3</div><div class="step-text"><strong>DCF model construction</strong><br>25-scenario sensitivity table with dynamic live price threshold</div></div>
-<div class="method-step"><div class="step-num">4</div><div class="step-text"><strong>Catalyst identification &amp; timeline</strong><br>FDA clearance tracking, acquisition analysis, business model mapping</div></div>
-<div class="method-step"><div class="step-num">5</div><div class="step-text"><strong>Bear case stress testing</strong><br>5-point rebuttal framework with verdict classification</div></div>
-<div class="method-step"><div class="step-num">6</div><div class="step-text"><strong>Competitive moat scoring</strong><br>6 dimensions normalized radar analysis</div></div>
-<div class="method-step"><div class="step-num">7</div><div class="step-text"><strong>Presentation generation</strong><br>Live data visualizations, Chart.js, dynamic price integration</div></div>
-</div>
-<div>
-<div class="card" style="margin-bottom:16px">
-<h3>Data Source Verification</h3>
-<div style="overflow-x:auto;margin-top:8px">
-<table>
-<thead><tr><th>Source</th><th>Status</th><th>Reference</th></tr></thead>
-<tbody>
-<tr><td style="font-family:var(--font-body)">ISRG Financials</td><td class="teal">VERIFIED</td><td>SEC EDGAR / FactSet</td></tr>
-<tr><td style="font-family:var(--font-body)">SYK Financials</td><td class="teal">VERIFIED</td><td>Perplexity Finance</td></tr>
-<tr><td style="font-family:var(--font-body)">TER Financials</td><td class="teal">VERIFIED</td><td>Perplexity Finance</td></tr>
-<tr><td style="font-family:var(--font-body)">FANUY Data</td><td class="gold">ESTIMATED</td><td>Public Annual Report</td></tr>
-<tr><td style="font-family:var(--font-body)">ABNNY Data</td><td class="gold">ESTIMATED</td><td>Public Annual Report</td></tr>
-<tr><td style="font-family:var(--font-body)">YASKY Data</td><td class="gold">ESTIMATED</td><td>Public Annual Report</td></tr>
-<tr><td style="font-family:var(--font-body)">FDA Clearances</td><td class="teal">VERIFIED</td><td>FDA 510(k) Database</td></tr>
-<tr><td style="font-family:var(--font-body)">Live Price</td><td class="teal">VERIFIED</td><td>Perplexity Finance API</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="card card-alt">
-<p style="font-size:12px;color:var(--gray);line-height:1.6">
-<strong>Attribution:</strong> Research conducted entirely using Perplexity Computer. No Bloomberg Terminal. No Excel. No outside tools.<br><br>
-<strong>Competition:</strong> Submitted to the Perplexity Computer Stock Pitch Competition, March 30 &ndash; April 3, 2026.
-</p>
-</div>
-</div>
-</div>
-
-<div class="footnote" style="margin-top:auto">
-FANUY, ABNNY, YASKY figures are estimates derived from publicly available annual reports. Primary-source verification was unavailable through Perplexity finance tools.<br>
-Recurring revenue defined as I&amp;A + Services segments (75.4% of FY2025 revenue).<br>
-DCF price targets are model outputs. Assumptions available on request.
-</div>
-</div>
-
-<!-- ===================== JAVASCRIPT ===================== -->
-<script>
-// ---- CONFIGURATION ----
-const BEAR_TARGET = 292;
-const BASE_TARGET = 617;
-const BULL_TARGET = 841;
-const FALLBACK_PRICE = 466.99;
-let currentPrice = null;
-
-// ---- DCF SENSITIVITY DATA ----
-// Pre-computed DCF values: rows = growth [12,14,16,18,20], cols = WACC [8.5,9.0,9.5,10.0,10.5]
-const dcfMatrix = [
-  [358, 332, 308, 286, 266],   // 12% growth
-  [432, 400, 371, 344, 320],   // 14% growth
-  [519, 480, 445, 413, 383],   // 16% growth (base ~445 mid)
-  [623, 576, 534, 495, 460],   // 18% growth
-  [747, 691, 640, 593, 551]    // 20% growth
-];
-const growthLabels = ['12%','14%','16%','18%','20%'];
-
-// ---- LIVE PRICE FETCH ----
-async function fetchLivePrice() {
-  try {
-    const resp = await fetch('https://api.perplexity.ai/finance/quotes?symbols=ISRG&fields=price', {
-      headers: {'Accept': 'application/json'},
-      signal: AbortSignal.timeout(8000)
-    });
-    if (!resp.ok) throw new Error('Not OK');
-    const data = await resp.json();
-    if (data && data.results && data.results[0] && data.results[0].price) {
-      return data.results[0].price;
-    }
-    throw new Error('No price in response');
-  } catch(e) {
-    // Try alternate endpoint
-    try {
-      const resp2 = await fetch('https://finance.perplexity.ai/api/v1/quotes?symbols=ISRG', {
-        headers: {'Accept': 'application/json'},
-        signal: AbortSignal.timeout(8000)
-      });
-      if (resp2.ok) {
-        const d2 = await resp2.json();
-        if (d2 && d2[0] && d2[0].price) return d2[0].price;
-      }
-    } catch(e2) {}
-    return null;
-  }
-}
-
-function updateAllPrices(price, isLive) {
-  currentPrice = price;
-  const fmt = '$' + price.toFixed(2);
-  const baseUp = ((BASE_TARGET / price) - 1) * 100;
-  const bullUp = ((BULL_TARGET / price) - 1) * 100;
-  const bearDown = ((BEAR_TARGET / price) - 1) * 100;
-
-  // Title slide
-  document.getElementById('livePriceTitle').textContent = fmt;
-  const dot = document.getElementById('priceDot');
-  const label = document.getElementById('priceStatusLabel');
-  if (isLive) {
-    dot.className = 'pulse-dot';
-    label.textContent = 'LIVE';
-    label.style.color = 'var(--teal)';
-  } else {
-    dot.className = 'pulse-dot delayed-dot';
-    label.textContent = 'DELAYED';
-    label.style.color = 'var(--gold)';
-  }
-
-  // Upside/downside
-  const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
-  document.getElementById('bearPctTitle').textContent = fmtPct(bearDown);
-  document.getElementById('bearPctTitle').style.color = 'var(--red)';
-  document.getElementById('basePctTitle').textContent = fmtPct(baseUp);
-  document.getElementById('basePctTitle').style.color = 'var(--teal)';
-  document.getElementById('bullPctTitle').textContent = fmtPct(bullUp);
-  document.getElementById('bullPctTitle').style.color = 'var(--gold)';
-
-  // DCF slide
-  document.getElementById('bearPctDCF').textContent = fmtPct(bearDown);
-  document.getElementById('bearPctDCF').style.color = 'var(--red)';
-  document.getElementById('basePctDCF').textContent = fmtPct(baseUp);
-  document.getElementById('basePctDCF').style.color = 'var(--teal)';
-  document.getElementById('bullPctDCF').textContent = fmtPct(bullUp);
-  document.getElementById('bullPctDCF').style.color = 'var(--gold)';
-  document.getElementById('dcfLiveNote').textContent = 'Current: ' + fmt;
-
-  // Conclusion slide
-  document.getElementById('bullUpsideConc').textContent = fmtPct(bullUp);
-  document.getElementById('bearDownsideConc').textContent = fmtPct(bearDown);
-
-  // Sensitivity table coloring
-  let aboveCount = 0;
-  const tbody = document.getElementById('sensitivityBody');
-  tbody.innerHTML = '';
-  dcfMatrix.forEach((row, ri) => {
-    const tr = document.createElement('tr');
-    const th = document.createElement('td');
-    th.style.fontWeight = '600';
-    th.style.fontFamily = 'var(--font-body)';
-    th.textContent = growthLabels[ri];
-    tr.appendChild(th);
-    row.forEach(val => {
-      const td = document.createElement('td');
-      td.textContent = '$' + val;
-      if (val >= price) {
-        td.className = 'above';
-        aboveCount++;
-      } else {
-        td.className = 'below';
-      }
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
-  });
-  document.getElementById('dcfSummary').textContent = aboveCount + ' of 25 scenarios above current price of ' + fmt;
-
-  // Update price target chart
-  updatePriceTargetChart(price);
-}
-
-async function initPrice() {
-  const livePrice = await fetchLivePrice();
-  if (livePrice) {
-    updateAllPrices(livePrice, true);
-  } else {
-    updateAllPrices(FALLBACK_PRICE, false);
-  }
-}
-
-// Refresh every 5 minutes
-setInterval(async () => {
-  const p = await fetchLivePrice();
-  if (p) updateAllPrices(p, true);
-}, 300000);
-
-// ---- NAVIGATION ----
-const slides = document.querySelectorAll('.slide');
-const dotsContainer = document.getElementById('navDots');
-slides.forEach((_, i) => {
-  const dot = document.createElement('div');
-  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-  dot.addEventListener('click', () => slides[i].scrollIntoView({behavior:'smooth'}));
-  dotsContainer.appendChild(dot);
-});
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const idx = Array.from(slides).indexOf(entry.target);
-      document.querySelectorAll('.nav-dot').forEach((d,i) => d.classList.toggle('active', i === idx));
-      document.getElementById('slideCounter').textContent = (idx+1) + ' / ' + slides.length;
-    }
-  });
-}, {threshold: 0.5});
-slides.forEach(s => observer.observe(s));
-
-// ---- CHARTS ----
-Chart.defaults.color = '#8892a4';
-Chart.defaults.borderColor = 'rgba(136,146,164,0.1)';
-Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
-
-// Revenue Donut (Slide 2)
-new Chart(document.getElementById('revenueDonut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Instruments & Accessories', 'Systems', 'Services'],
-    datasets: [{
-      data: [55, 25, 20],
-      backgroundColor: ['#00d4aa','#4a9eff','#f0b90b'],
-      borderWidth: 0,
-      hoverOffset: 8
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '65%',
-    plugins: {
-      legend: {position:'bottom', labels:{padding:12, usePointStyle:true, pointStyleWidth:8, font:{size:12}}}
-    }
-  }
-});
-
-// Recurring Revenue Bar (Slide 3)
-new Chart(document.getElementById('recurringBarChart'), {
-  type: 'bar',
-  data: {
-    labels: ['ISRG','SYK','FANUY~','ABNNY~','TER','YASKY~'],
-    datasets: [{
-      label: 'Recurring Revenue %',
-      data: [75, 35, 20, 25, 15, 15],
-      backgroundColor: ['#00d4aa','#4a9eff','#8892a4','#8892a4','#4a9eff','#8892a4'],
-      borderRadius: 4,
-      barPercentage: 0.7
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    indexAxis: 'y',
-    scales: {
-      x: {max:100, ticks:{callback:v=>v+'%',font:{family:'JetBrains Mono',size:11}}, grid:{color:'rgba(136,146,164,0.08)'}},
-      y: {ticks:{font:{size:12}}, grid:{display:false}}
-    },
-    plugins: {legend:{display:false}}
-  }
-});
-
-// Quarterly Revenue (Slide 4)
-new Chart(document.getElementById('quarterlyRevenueChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25'],
-    datasets: [
-      {label:'Systems', data:[480,440,530,630,530,520,600,690], backgroundColor:'#4a9eff', borderRadius:3, barPercentage:0.75},
-      {label:'I&A', data:[850,920,990,1030,1020,1120,1210,1290], backgroundColor:'#00d4aa', borderRadius:3, barPercentage:0.75},
-      {label:'Services', data:[210,215,225,230,235,245,255,260], backgroundColor:'#f0b90b', borderRadius:3, barPercentage:0.75}
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: {stacked:true, ticks:{font:{size:11}}, grid:{display:false}},
-      y: {stacked:true, ticks:{callback:v=>'$'+v+'M',font:{family:'JetBrains Mono',size:11}}, grid:{color:'rgba(136,146,164,0.08)'}}
-    },
-    plugins: {legend:{position:'top',labels:{usePointStyle:true,pointStyleWidth:8,font:{size:11},padding:12}}}
-  }
-});
-
-// Procedures & Installed Base (Slide 4)
-new Chart(document.getElementById('procedureChart'), {
-  type: 'bar',
-  data: {
-    labels: ['FY2020','FY2021','FY2022','FY2023','FY2024','FY2025'],
-    datasets: [
-      {label:'Procedures (M)', data:[1.24,1.59,1.88,2.29,2.68,3.15], backgroundColor:'#00d4aa', borderRadius:3, barPercentage:0.6, yAxisID:'y'},
-      {label:'Installed Base', data:[5989,6730,7544,8968,10034,11106], type:'line', borderColor:'#f0b90b', backgroundColor:'transparent', pointBackgroundColor:'#f0b90b', pointRadius:4, borderWidth:2, tension:0.3, yAxisID:'y1'}
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {position:'left', ticks:{callback:v=>v.toFixed(1)+'M',font:{family:'JetBrains Mono',size:11}}, grid:{color:'rgba(136,146,164,0.08)'}},
-      y1: {position:'right', ticks:{callback:v=>v.toLocaleString(),font:{family:'JetBrains Mono',size:11}}, grid:{display:false}},
-      x: {ticks:{font:{size:11}}, grid:{display:false}}
-    },
-    plugins: {legend:{position:'top',labels:{usePointStyle:true,pointStyleWidth:8,font:{size:11},padding:12}}}
-  }
-});
-
-// Quarterly Growth (Slide 5)
-new Chart(document.getElementById('qtrGrowthChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Q1 2025','Q2 2025','Q3 2025','Q4 2025'],
-    datasets: [
-      {label:'Revenue YoY', data:[19.2,21.4,22.9,18.8], backgroundColor:'#00d4aa', borderRadius:4, barPercentage:0.5},
-      {label:'Procedure YoY', data:[17.0,18.0,18.5,16.5], backgroundColor:'#4a9eff', borderRadius:4, barPercentage:0.5}
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {ticks:{callback:v=>v+'%',font:{family:'JetBrains Mono',size:11}}, grid:{color:'rgba(136,146,164,0.08)'}},
-      x: {ticks:{font:{size:11}}, grid:{display:false}}
-    },
-    plugins: {legend:{position:'top',labels:{usePointStyle:true,pointStyleWidth:8,font:{size:11},padding:12}}}
-  }
-});
-
-// Price Target Chart (Slide 9)
-let priceTargetChartInstance = null;
-function updatePriceTargetChart(livePrice) {
-  const ctx = document.getElementById('priceTargetChart');
-  if (priceTargetChartInstance) priceTargetChartInstance.destroy();
-  priceTargetChartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Bear $292','Base $617','Bull $841'],
-      datasets: [{
-        data: [292, 617, 841],
-        backgroundColor: ['#ff4d6a','#00d4aa','#f0b90b'],
-        borderRadius: 6,
-        barPercentage: 0.5
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      indexAxis: 'y',
-      scales: {
-        x: {
-          min: 0,
-          max: 950,
-          ticks:{callback:v=>'$'+v,font:{family:'JetBrains Mono',size:11}},
-          grid:{color:'rgba(136,146,164,0.08)'}
-        },
-        y: {ticks:{font:{size:12,weight:'600'}}, grid:{display:false}}
-      },
-      plugins: {
-        legend:{display:false},
-        annotation: undefined
-      }
-    },
-    plugins: [{
-      id: 'currentPriceLine',
-      afterDraw(chart) {
-        if (!livePrice) return;
-        const xScale = chart.scales.x;
-        const x = xScale.getPixelForValue(livePrice);
-        const ctx = chart.ctx;
-        ctx.save();
-        ctx.strokeStyle = '#f0f2f5';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
-        ctx.beginPath();
-        ctx.moveTo(x, chart.chartArea.top);
-        ctx.lineTo(x, chart.chartArea.bottom);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#f0f2f5';
-        ctx.font = "600 11px 'JetBrains Mono', monospace";
-        ctx.textAlign = 'center';
-        ctx.fillText('Current: $' + livePrice.toFixed(0), x, chart.chartArea.top - 6);
-        ctx.restore();
-      }
-    }]
-  });
-}
-
-// Radar Chart (Slide 10)
-new Chart(document.getElementById('radarChart'), {
-  type: 'radar',
-  data: {
-    labels: ['Growth','Margins','Recurring','Moat','Catalyst Density','FCF Quality'],
-    datasets: [
-      {
-        label: 'ISRG',
-        data: [90, 85, 95, 98, 95, 88],
-        borderColor: '#00d4aa',
-        backgroundColor: 'rgba(0,212,170,0.12)',
-        borderWidth: 2,
-        pointBackgroundColor: '#00d4aa',
-        pointRadius: 4
-      },
-      {
-        label: 'SYK',
-        data: [55, 60, 40, 50, 35, 55],
-        borderColor: '#4a9eff',
-        backgroundColor: 'rgba(74,158,255,0.08)',
-        borderWidth: 2,
-        pointBackgroundColor: '#4a9eff',
-        pointRadius: 3
-      },
-      {
-        label: 'TER',
-        data: [10, 55, 15, 30, 15, 40],
-        borderColor: '#f0b90b',
-        backgroundColor: 'rgba(240,185,11,0.08)',
-        borderWidth: 2,
-        pointBackgroundColor: '#f0b90b',
-        pointRadius: 3
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        angleLines:{color:'rgba(136,146,164,0.15)'},
-        grid:{color:'rgba(136,146,164,0.1)'},
-        pointLabels:{font:{size:11,weight:'600'},color:'#f0f2f5'},
-        ticks:{display:false},
-        min:0, max:100
-      }
-    },
-    plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyleWidth:8,font:{size:11},padding:16}}}
-  }
-});
-
-// ---- INIT ----
-document.addEventListener('DOMContentLoaded', () => {
-  initPrice();
-  // Initialize with fallback while waiting
-  updateAllPrices(FALLBACK_PRICE, false);
-});
-</script>
-<script data-pplx-inline-edit>
-(function(){
-  if(window===window.top)return;
-  function inlineAll(orig,clone){
-    if(orig.nodeType!==1)return;
-    try{
-      var cs=getComputedStyle(orig);
-      var t='';
-      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
-      clone.style.cssText=t;
-    }catch(e){}
-    var oc=orig.children,cc=clone.children;
-    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
-  }
-  function stripExternal(clone){
-    var imgs=clone.querySelectorAll('img');
-    for(var i=0;i<imgs.length;i++){
-      var s=imgs[i].getAttribute('src');
-      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
-    }
-    var all=clone.querySelectorAll('*');
-    for(var i=0;i<all.length;i++){
-      var st=all[i].style.cssText;
-      if(st&&st.indexOf('url(')>=0){
-        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
-      }
-    }
-  }
-  window.addEventListener('message',function(e){
-    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
-    var scrollX=window.scrollX||window.pageXOffset||0;
-    var scrollY=window.scrollY||window.pageYOffset||0;
-    var w=window.innerWidth,h=window.innerHeight;
-    try{
-      var clone=document.documentElement.cloneNode(true);
-      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
-      for(var i=0;i<rm.length;i++){rm[i].remove();}
-      inlineAll(document.documentElement,clone);
-      stripExternal(clone);
-      var html=new XMLSerializer().serializeToString(clone);
-      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
-        +'<foreignObject width="100%" height="100%">'
-        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
-        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
-        +html+'</div></div></foreignObject></svg>';
-      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-      var img=new Image();
-      img.onload=function(){
-        var c=document.createElement('canvas');c.width=w;c.height=h;
-        c.getContext('2d').drawImage(img,0,0);
-        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
-      };
-      img.onerror=function(){
-        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
-      };
-      img.src=svgUrl;
-    }catch(err){
-      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
-    }
-  });
-})();
-</script></body>
-</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<allsms count="151">
+	<sms address="+18602215171" time="Jan 24, 2023 16:49:13" date="1674596953120" type="2" body="The price for the unit, which was demonstrably operable was $20k. Upgrades are your expense. Please tell me when you will be sending the check for the full $10k amount. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 24, 2023 16:46:48" date="1674596808045" type="1" body="hello,   spoke with repair shop today they finally got some guidance on parts and teardown. after teardown parts will be ordered .  hopefully we will have a resolution in the next few weeks. " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Jan 23, 2023 19:24:29" date="1674519869786" type="2" body="Ed, I still don&apos;t have that $10k check. We are more than a month and a half out since the machine was delivered to you. I need that money to run my business. When are you sending full payment?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 17, 2023 17:01:54" date="1673992914200" type="2" body="The axles are operable. If they weren&apos;t, I would not have been able to load/unload the Land Tamer onto the trailer. Please send that $10k check today." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 17, 2023 17:00:29" date="1673992829820" type="1" body="hey Susan.   spoke with repair shop today.   they are still. Working with supplier to get repair parts for an operable axles. i&apos;ll reach out to you soon as they get back to.    thks " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Jan 14, 2023 12:09:12" date="1673716152657" type="2" body="Ed, I have not received the $10k check. If you want to upgrade the oem axles, that is up to you, but I need to be paid now the full remaining amount for the machine. When are you sending the check or wiring the money?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 12, 2023 08:02:50" date="1673528570327" type="2" body="Ed, have you sent that $10k check yet? I need it this week. Thank you." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 9, 2023 09:02:16" date="1673272936436" type="2" body="Ed, please send or wire that $10k check today. If you want new axles for a tractor with  less than 450 hours, that needs to be your expense. Our agreed-upon price for the operational machine was $20k." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 5, 2023 17:10:10" date="1672956610360" type="2" body="I drove the machine onto the trailer myself" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 5, 2023 17:09:35" date="1672956575888" type="2" body="The hydraulic drives were all working perfectly" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 5, 2023 17:09:11" date="1672956551222" type="2" body="When it left here it only needed the minor tire/wheel repairs. What are you referring to re: parts?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 5, 2023 16:57:41" date="1672955861546" type="1" body="hello.   I will check with Mechanic and see how he&apos;s making out on locating parts to repair machine. last time I spoke with him, he been  in contact with a dealer down south.  " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Jan 5, 2023 08:37:16" date="1672925836078" type="2" body="Ed, I have not received the remaining $10k. Please confirm that you will send the check or wire if you have not already done so." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jan 2, 2023 08:55:22" date="1672667722889" type="2" body="Ed, its been nearly a month. Please wire the other $10k today." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 23, 2022 11:32:41" date="1671813161544" type="2" body="yes, that&apos;s what i heard. the hydraulic drives are fine. please wire payment today." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 23, 2022 11:09:16" date="1671811756080" type="1" body="hello.   hydratrek and landtamer recently went bankrupt.  not in business.   mechanic has been in touch with a company down south to get info/parts.  as soon as he gets back to me, I will get back to you .   I am on vacation until the new year.     thks.  
+" read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Dec 23, 2022 10:32:10" date="1671809530883" type="2" body="Please consult Hydratrek if you have any questions and please wire remaining payment of $10k today. Thank you." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 23, 2022 10:31:15" date="1671809475958" type="2" body="https://hydratrek.com/lt-8x8-xhd-extra-heavy-duty/" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 21, 2022 10:43:49" date="1671637429405" type="2" body="Please send the rest of the funds today. The machine does not need new hydraulic axle assemblies." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 21, 2022 10:43:01" date="1671637381309" type="2" body="I will check with him and get his consent and any updated contact info." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 17:19:44" date="1671574784215" type="1" body="name and phone please  thks. " read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:51:35" date="1671573095464" type="2" body="Did you find the extra track parts under the seat?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:48:55" date="1671572935916" type="2" body="And I would install led headlights, too. Wiring is good, checked voltage." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:48:10" date="1671572890039" type="2" body="All it needs is air in the one tire after the valve stem is replaced" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:47:25" date="1671572845564" type="2" body="As in the manufacturer/inventor?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:46:30" date="1671572790972" type="1" body="do you have any contacts that I could forward to Mechanic to assist him in parts/Repairs    thks" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Dec 20, 2022 16:34:34" date="1671572074538" type="2" body="I received the 10k check today. Thank you. When is the other 10k coming, please?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 14, 2022 14:34:11" date="1671046451780" type="2" body="Ed, in good faith I did let you know that there were a few things that needed attention on the machine but it is absolutely in working condition. The wheels will not fall off...we got it loaded just fine. It should not need drive parts with so few hours...maybe lubrication from sitting. The engine runs in pristine condition. Any repairs you want to do should be offset by not giving the driver those cases of wine/beer/cider we agreed on. Both the driver and I have been waiting to be paid for some time now, so please wire me the 20k today. A check of that amount will take at least 10 days to clear. I run a small business and have year end expenses. Thank you " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 14, 2022 14:26:18" date="1671045978462" type="1" body="Hey Susan,  sorry I didn&apos;t get back to you earlier. Left town early Monday.    I did briefly put eyes on the machine before I left.  
+
+Unfortunately there are a few things that need to be addressed.  Machine is definitely NOT in working condition.   At a quick scan, 2 flat tires, non working lights, passenger side rear drives.  It needs bearings, spindle and axle housing minimum.  It is completely inoperable.  If driven, wheels will fall off machine.  I asked a local guy to pickup machine and see what needs to be done to make it operable. He said he would get back to me as soon as he can look at it.  We did get our first snowfall so he has been backed up with snow related repairs. 
+
+I asked my wife to send you a check for $10k  in good faith money until we figure out cost of repairs.  I will confirm later with her that she got it done. " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Dec 14, 2022 11:27:26" date="1671035246448" type="2" body="Will you be wiring funds today?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 10, 2022 13:06:57" date="1670695617996" type="1" body="👍" read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Dec 10, 2022 11:51:05" date="1670691065773" type="2" body="You got the email with the bill of sale, etc., correct?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 10, 2022 11:33:51" date="1670690031053" type="2" body="Okay, thanks" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 10, 2022 11:33:26" date="1670690006348" type="1" body="hey Susan.  still out of town and will be returning this evening.    have not even laid eyes on machine yet intend to do to so tomorrow.   Will be in touch then    thks" read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Dec 10, 2022 07:31:48" date="1670675508165" type="2" body="Ed, will you please let me know when you will be wiring payment and sending payment to the driver? Thanks." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 14:27:41" date="1670182061274" type="2" body="I emailed you the bill of sale and wiring instructions, plus notes on the machine." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 14:22:29" date="1670181749676" type="2" body="OK, they connected. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 14:19:41" date="1670181581219" type="1" body="my guy is going to meet him  " read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 14:02:57" date="1670180577906" type="2" body="Driver is 15 minutes away. He tried to be earlier but traffic and gas stop" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 09:47:17" date="1670165237308" type="2" body="Took me 15min to load " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 09:47:01" date="1670165221387" type="2" body="Thanks. I stressed to the driver before noon delivery but I don&apos;t think he will make it. Unloading should take less than half an hour." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 09:45:46" date="1670165146161" type="1" body="I will reach out to my guy. (maybe) he&apos;s not a big fan of coming in on sundays.   please get updated eta.   " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 09:02:27" date="1670162547131" type="2" body="Trying to get there by noon. Can he go ahead and  unload if you can&apos;t be there or do you have somebody to be there?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:58:50" date="1670162330982" type="1" body="eta?" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:58:15" date="1670162295229" type="2" body="👍" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:58:04" date="1670162284016" type="1" body="Address for other side of farm.   " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:57:00" date="1670162220836" type="2" body="Thanks, is that also the winery or another location?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:55:25" date="1670162125430" type="1" body="209 sand hill rd, portland  CT 06480.  " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:51:53" date="1670161913699" type="2" body="Yes, it&apos;s on its way" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:41:05" date="1670161265831" type="1" body="is it coming today?" read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:33:41" date="1670160821445" type="2" body="I&apos;ll email you the bill of sale" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 08:28:30" date="1670160510481" type="2" body="Let me check. I know he&apos;s booking it." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 4, 2022 06:38:45" date="1670153925162" type="1" body="eta" read="1" service_center="+19039321430" name="" />
+	<sms address="+18602215171" time="Dec 2, 2022 12:36:43" date="1670002603042" type="2" body="I will let the driver know." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Dec 2, 2022 12:35:52" date="1670002552823" type="1" body="👍 it will have to be before noon.  " read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Dec 2, 2022 11:53:23" date="1670000003431" type="2" body="You still good for Sunday delivery? I don&apos;t have a time yet..." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 23, 2022 13:30:22" date="1669228222558" type="2" body="It will be $700, u pay driver upon delivery" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 23, 2022 13:29:32" date="1669228172091" type="2" body="Setting it up now." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 23, 2022 13:29:20" date="1669228160961" type="2" body="Great!" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 23, 2022 13:03:47" date="1669226627005" type="1" body="👍" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 23, 2022 09:47:56" date="1669214876622" type="2" body="How does delivery on Sunday December 4 work for you?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 19, 2022 12:41:23" date="1668879683319" type="2" body="😎" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 19, 2022 12:40:52" date="1668879652340" type="1" body="👍" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 19, 2022 10:47:32" date="1668872852295" type="2" body="OK, I think I have a guy who will bring you the machine for about $700. I will give you his contact info and you can set it up for any day after Thanksgiving. This week coming up is pretty crazy for me. Does that work?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 11, 2022 11:43:37" date="1668185017681" type="2" body="$750 or lower out the door is my goal" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 11, 2022 11:42:53" date="1668184973477" type="2" body="I&apos;m trying to get it down a bit. There was a &quot;hidden&quot; service fee of $100 on top of the $833. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 11, 2022 11:41:24" date="1668184884060" type="1" body="any progress?" read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:49:10" date="1668084550182" type="2" body="OK, I&apos;ll get that done by end of today. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:46:23" date="1668084383071" type="1" body="ok.  let&apos;s  set up $833.  " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:33:46" date="1668083626692" type="2" body="Nothing lower than $883 yet tho. Inflation and high gas prices are a killer." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:33:14" date="1668083594558" type="2" body="Getting more quotes in now. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:32:54" date="1668083574232" type="2" body="OK, great, thanks. I have your schedule, and I will do my best in the next couple days to set up delivery for best price." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:31:59" date="1668083519074" type="1" body="👍done.   " read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 10, 2022 07:28:34" date="1668083314508" type="2" body="You make a good point. 20k for unit in working condition, plus you pay for delivery, which I will arrange in coordination with your schedule. And a couple cases of wine/beer/cider if u have in stock." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 19:15:28" date="1668039328678" type="1" body="i&apos;m still paying way more than that one sold for💰" read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 19:14:20" date="1668039260115" type="1" body="this is a real comp(sale) newer model with less hours.   " read="1" service_center="+19039321430" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 19:13:15" date="1668039195412" type="1" body="20k  The best I can do.   " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 18:02:25" date="1668034945086" type="2" body="BTW, I met you halfway at 22k. Can&apos;t do 20k unless you have something to kick in for trade." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 18:00:55" date="1668034855704" type="2" body="Are you comfortable unloading the machine if I talk you through it? It&apos;s pretty easy...I unloaded when I accepted delivery from manufacturer in Montana." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 16:03:19" date="1668027799560" type="1" body="ok!   hopefully you&apos;ll find a little better price on the delivery.      Christmas is coming early!!! lol.      I will pay $20K for unit in working condition plus the delivery.    I am around this week until sunday 11am.      The next two weeks I am out of town Monday through Thursday and Monday through Friday.  thks " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 14:56:09" date="1668023769979" type="1" body="my guy charges $2.50 a loaded mile. but he won&apos;t go that far.  " read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Nov 9, 2022 14:23:15" date="1668021795195" type="2" body="So far low quote is $833 for the 300 miles. Working to get a lower bid for the 300 mile transport, just keeping you apprised." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:54:24" date="1667926464869" type="2" body="I&apos;m on the eastern shore of the lake near the state park. My home does not come up on Google maps" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:44:10" date="1667925850337" type="1" body="thks" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:43:44" date="1667925824086" type="2" body="114 Lake Umbagog, Errol, NH 03579" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:43:00" date="1667925780489" type="1" body="what is address where machine is located ??" read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:24:12" date="1667924652448" type="2" body="Will do. Collecting competing quotes now. Get you the info asap." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 8, 2022 11:21:52" date="1667924512550" type="1" body="let me know when you get a shipping quote.   i&apos;m around the rest of this week until Sunday but I am then traveling during weekdays for a few weeks.  once we get a quote I can make offer.   thks " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 13:27:12" date="1667845632517" type="1" body="please do.  thks " read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 13:26:23" date="1667845583555" type="2" body="I can find somebody. I haul boats and have contacts." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 13:25:29" date="1667845529207" type="1" body="do you have anyone who can haul the machine to me.    my ZIP Code is 06480.  
+" read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:40:51" date="1667839251502" type="2" body="https://www.google.com/search?q=land+tamer+video&amp;oq=land+tamer+video&amp;aqs=chrome..69i57.6403j0j7&amp;client=ms-android-verizon&amp;sourceid=chrome-mobile&amp;ie=UTF-8" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:39:42" date="1667839182029" type="2" body="Double stick center console fwd and reverse and turn (one stick fwd, one back)" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:38:19" date="1667839099493" type="1" body="to move it forward or reverse.  i&apos;m assuming you push on one or both of wheel controls ?  " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:35:58" date="1667838958925" type="2" body="Both switches for up/down/right/left activate hydraulic controls" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:34:29" date="1667838869445" type="1" body="trim up trim down? hydraulic right hydraulic left?" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:33:34" date="1667838814278" type="2" body="Toggle swith on control panel moves prop right left and other switch up down" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:32:05" date="1667838725469" type="1" body="how is the 
+steering controlled while on. water.  " read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:24:26" date="1667838266417" type="2" body="And I&apos;ll give her a bath 🛁 😎" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:23:37" date="1667838217986" type="2" body="I also have the cad plans for front 3pt attachment" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:22:59" date="1667838179033" type="2" body="I mean, wheel " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:22:48" date="1667838168701" type="2" body="Machine also has a spare tire" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:22:11" date="1667838131903" type="2" body="I have contact info for land tamer inventor and all parts are generic or obtainable from deutz usa" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:21:42" date="1667838102044" type="2" body="Yep, I was asking 25k. So if you pick up, I&apos;ll split the difference at 22k and a couple cases of your product if you have any in stock." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:21:21" date="1667838081282" type="1" body="Unfortunately Land tamer/hydratrek. are out of business.    Parts/Service help will be non existent. " read="1" service_center="+19039321429" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:19:19" date="1667837959088" type="1" body="what are you asking for the machine?   I offered you 19 K last year delivered.  " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:10:47" date="1667837447313" type="2" body="Yes, I understand. Same company now. Just a similar machine for comparison." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:10:02" date="1667837402619" type="1" body="The Hydratrek unit is different beast.   dual props and different drive system.  " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:08:40" date="1667837320575" type="2" body="Only has 424 hours. I have the owners manual." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:08:20" date="1667837300875" type="1" body="have you replaced any of the axle seals " read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:08:06" date="1667837286986" type="2" body="No, nor the fluids" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:07:40" date="1667837260637" type="1" body="have you changed any of the drive motors?   " read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:03:28" date="1667837008590" type="2" body="It does have leaves in it, which I remove every fall. Will take care of that Wednesday." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:02:25" date="1667836945766" type="2" body="Yesterday. Didn&apos;t retake pictures since it has not been moved/used" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:01:38" date="1667836898089" type="1" body="when was the last time you ran it?     do you have recent pictures?   " read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:01:21" date="1667836881214" type="2" body="Just resent you photos." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 11:00:06" date="1667836806256" type="1" body="arrigoniwinery@aol.com" read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:55:17" date="1667836517574" type="2" body="What&apos;s the best email for you?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:54:35" date="1667836475415" type="2" body="I&apos;ll resend you photos" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:53:58" date="1667836438154" type="1" body="what is the present condition of yours.     running?    tires ?   winch and prop system?   tracks?   please send pics.  " read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:52:00" date="1667836320712" type="2" body="https://sherpusadealer.com/product/2010-hydratrek-d2488b/" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:49:54" date="1667836194086" type="2" body="Hydratrek owns Land Tamer now, so this similar model for reference." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:49:19" date="1667836159840" type="2" body="https://www.machinerytrader.com/listings/for-sale/hydratrek/d2488b/miscellaneous-equipment/1050" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:43:45" date="1667835825417" type="2" body="My machine has 424 hours." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:42:44" date="1667835764185" type="2" body="Same machine as mine except no tracks or enclosed cab. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 7, 2022 10:41:05" date="1667835665221" type="2" body="https://www.ebay.com/itm/144787871229?mkcid=16&amp;mkevt=1&amp;mkrid=711-127632-2357-0&amp;ssspo=L1eQMaCmT5y&amp;sssrc=2349624&amp;ssuid=&amp;var=&amp;widget_ver=artemis&amp;media=SMS" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 5, 2022 10:12:04" date="1667657524187" type="2" body="You don&apos;t happen to have a bandsaw mill you&apos;d like to out toward a partial trade, do you?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 5, 2022 10:11:24" date="1667657484086" type="2" body="Thanks! I found a couple others, too. I&apos;ll shoot them over when I get back to my shop. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 10:30:03" date="1667399403948" type="2" body="Thanks for checking. I think we can work something out. I&apos;ll do some comps and get right back to you." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 10:28:52" date="1667399332037" type="1" body="I just checked my notes.   last time we spoke I offered you 19 K deliverd you were asking 25K. it&apos;s certainly didn&apos;t go up in value. lol!   let me know.  thks " read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 10:19:47" date="1667398787495" type="2" body="That&apos;s awesome, thanks. Weather&apos;s still great here for you to come up and git her home, too." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 10:19:01" date="1667398741812" type="1" body="okey-dokey!    let me know.   I am ready willing and able to purchase.  thks" read="1" service_center="+19039321423" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 10:16:42" date="1667398602905" type="2" body="Hi, Ed. Thanks for getting back to me. Machine is in the same condition as before, and I can get you details once I go through it today. It&apos;s 74hp with less than 1k hours on it, so price-wise I&apos;ll do some quick research on similar used tractors and we can chat from there. Work for you?" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 09:20:21" date="1667395221489" type="1" body="Hey Susan.   congratulation!    i&apos;m still interested.  what condition is the unit in?   how much are u thinking💰" read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Nov 2, 2022 06:20:19" date="1667384419245" type="2" body="Hi, Ed. Guess what? Now that I got rid of my USDA farm loan I can finally sell the Land Tamer if you are still interested. " read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Oct 10, 2021 15:35:49" date="1633894549260" type="2" body="Thank you, Ed!" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Oct 10, 2021 15:35:27" date="1633894527555" type="1" body="OK.  Talk soon.   Good luck to you as well.    Thks" read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="Oct 10, 2021 15:33:18" date="1633894398372" type="2" body="Understatement when it comes to Feds. I really can&apos;t do anything until they release my loan. I&apos;m really sorry. As soon as I have any relief at all, I&apos;ll be in touch ASAP. Good luck with your project!" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Oct 10, 2021 15:26:30" date="1633893990933" type="1" body="Hello.    Nothings ever easy!    Especially dealing with the government.     I have a project I want to work on this fall/winter.   I&apos;d be willing to give you a substantial deposit and the balance whenever you get the paperwork straightened out.   Thoughts????" read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Oct 10, 2021 13:35:40" date="1633887340038" type="2" body="Hi, Ed. I&apos;m sorry, I have been driving, transporting boats. I would love to sell but no progress with USDA, so my hands are tied until they release my loan. I promise I will let you know as soon as I hear from them. I have no idea when that will be." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Oct 6, 2021 19:21:37" date="1633562497343" type="1" body="Hey Susan.   Another harvest behind us.  Hope you had a good season.  Thanking about upcoming projects.  Did you make any progress land tamer ?   Are you still interested in selling?" read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Jun 22, 2021 07:15:35" date="1624360535563" type="2" body="Hi, Ed. Thanks for thinking about ways to get this done. I&apos;ll have to see what USDA will allow...they are miserable to deal with. But I&apos;ll look into it. Would really love to sell you the Land Tamer" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="Jun 21, 2021 19:21:34" date="1624317694139" type="1" body="Hey Susan.  I was thinking if you&apos;re not using the machine. You could bring it to me I can give you a substantial deposit and the balance when you have clear/release title.  Thoughts??  " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="May 27, 2021 20:27:01" date="1622161621328" type="2" body="Thanks!" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="May 27, 2021 20:25:07" date="1622161507700" type="1" body="U2👍" read="1" service_center="+19039321428" name="" />
+	<sms address="+18602215171" time="May 27, 2021 20:24:31" date="1622161471714" type="2" body="Thank you for understanding. Best wishes for a successful growing season." read="1" service_center="" name="" />
+	<sms address="+18602215171" time="May 27, 2021 20:16:22" date="1622160982165" type="1" body="No worries. Let me know when you&apos;re able to do something.   ☀️" read="1" service_center="+19039321427" name="" />
+	<sms address="+18602215171" time="May 23, 2021 19:45:03" date="1621813503480" type="2" body="not stringing you along...Sorry!" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="May 23, 2021 19:44:40" date="1621813480139" type="2" body="Hi, Ed. I&apos;m sorry I have been trying to wrap up all the unpleasant business w USDA, but they are impossible to work with. My loan matures next April, and I am hoping they will give me a release so I can sell to you. Please know that I am" read="1" service_center="" name="" />
+	<sms address="+18602215171" time="May 23, 2021 15:13:54" date="1621797234756" type="1" body="
+Are you out there?  Is the snow thawed?  " read="1" service_center="+19039321432" name="" />
+	<sms address="+18602215171" time="Apr 8, 2021 19:59:52" date="1617926392271" type="1" body="Happy Spring☀️ are you progressing and pictures and release??? Lol" read="1" service_center="+19039321428" name="" />
+	</allsms>
